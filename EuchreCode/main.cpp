@@ -88,5 +88,15 @@ SDL_Window* createWindow(const char* title, int x, int y, int w, int h, Uint32 f
 }
 
 int main() {
+	SDL_Window* window = createWindow("Euchre", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 800, 600, SDL_WINDOW_OPENGL);
+	SDL_GLContext context = SDL_GL_CreateContext(window);
+	
+	// Initialize GLEW
+	glewExperimental = GL_TRUE;
+	glewInit();
+	
+	// Initialize Depth Testing
+	glEnable(GL_DEPTH_TEST);
+	
 	return 0;
 }

@@ -8,6 +8,11 @@
 
 /* Begin PBXBuildFile section */
 		514F25C019C38E2C00A6F955 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 514F25BE19C38E2C00A6F955 /* main.cpp */; };
+		514F25C219C38E9A00A6F955 /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 514F25C119C38E9A00A6F955 /* OpenGL.framework */; };
+		514F25C419C38EA600A6F955 /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 514F25C319C38EA600A6F955 /* CoreFoundation.framework */; };
+		514F25C619C38ECB00A6F955 /* SDL2.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 514F25C519C38ECB00A6F955 /* SDL2.framework */; };
+		514F25C819C38EEA00A6F955 /* libSOIL.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 514F25C719C38EEA00A6F955 /* libSOIL.a */; };
+		514F25CA19C38F0D00A6F955 /* libGLEW.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 514F25C919C38F0D00A6F955 /* libGLEW.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -25,6 +30,11 @@
 /* Begin PBXFileReference section */
 		514F25B419C38DCA00A6F955 /* Euchre */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = Euchre; sourceTree = BUILT_PRODUCTS_DIR; };
 		514F25BE19C38E2C00A6F955 /* main.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = main.cpp; path = EuchreCode/main.cpp; sourceTree = SOURCE_ROOT; };
+		514F25C119C38E9A00A6F955 /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = System/Library/Frameworks/OpenGL.framework; sourceTree = SDKROOT; };
+		514F25C319C38EA600A6F955 /* CoreFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreFoundation.framework; path = System/Library/Frameworks/CoreFoundation.framework; sourceTree = SDKROOT; };
+		514F25C519C38ECB00A6F955 /* SDL2.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SDL2.framework; path = ../../../../Library/Frameworks/SDL2.framework; sourceTree = "<group>"; };
+		514F25C719C38EEA00A6F955 /* libSOIL.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libSOIL.a; path = ../../../../usr/local/lib/libSOIL.a; sourceTree = "<group>"; };
+		514F25C919C38F0D00A6F955 /* libGLEW.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libGLEW.a; path = "../../../../usr/local/include/glew-1.10.0/lib/libGLEW.a"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -32,6 +42,11 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				514F25CA19C38F0D00A6F955 /* libGLEW.a in Frameworks */,
+				514F25C819C38EEA00A6F955 /* libSOIL.a in Frameworks */,
+				514F25C619C38ECB00A6F955 /* SDL2.framework in Frameworks */,
+				514F25C419C38EA600A6F955 /* CoreFoundation.framework in Frameworks */,
+				514F25C219C38E9A00A6F955 /* OpenGL.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -41,6 +56,11 @@
 		514F25AB19C38DCA00A6F955 = {
 			isa = PBXGroup;
 			children = (
+				514F25C919C38F0D00A6F955 /* libGLEW.a */,
+				514F25C719C38EEA00A6F955 /* libSOIL.a */,
+				514F25C519C38ECB00A6F955 /* SDL2.framework */,
+				514F25C319C38EA600A6F955 /* CoreFoundation.framework */,
+				514F25C119C38E9A00A6F955 /* OpenGL.framework */,
 				514F25B619C38DCA00A6F955 /* Euchre */,
 				514F25B519C38DCA00A6F955 /* Products */,
 			);
@@ -202,14 +222,34 @@
 		514F25BC19C38DCA00A6F955 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(LOCAL_LIBRARY_DIR)/Frameworks",
+				);
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"/usr/local/include/glew-1.10.0/lib",
+					/usr/local/include/SOIL/lib,
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				USER_HEADER_SEARCH_PATHS = "/usr/local/include/SOIL/src /usr/local/include/glm/glm /usr/local/include/glew-1.10.0/include";
 			};
 			name = Debug;
 		};
 		514F25BD19C38DCA00A6F955 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(LOCAL_LIBRARY_DIR)/Frameworks",
+				);
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"/usr/local/include/glew-1.10.0/lib",
+					/usr/local/include/SOIL/lib,
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				USER_HEADER_SEARCH_PATHS = "/usr/local/include/SOIL/src /usr/local/include/glm/glm /usr/local/include/glew-1.10.0/include";
 			};
 			name = Release;
 		};

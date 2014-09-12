@@ -48,10 +48,10 @@ GLuint LoadShaders(const char* vertex_file_path, const char* fragment_file_path)
 	glShaderSource(VertexShaderID, 1, &VertexSourcePointer , NULL);
 	glCompileShader(VertexShaderID);
 	glGetShaderiv(VertexShaderID, GL_COMPILE_STATUS, &Result);
-	//	if (Result == GL_TRUE) {
-	//		cout << "NOOO" << endl;
-	//		cout << VertexSourcePointer << endl;
-	//	}
+		if (Result == GL_TRUE) {
+			std::cout << "NOOOV" << std::endl;
+			std::cout << VertexSourcePointer << std::endl;
+		}
 	
  
 	// Compile Fragment Shader
@@ -59,10 +59,10 @@ GLuint LoadShaders(const char* vertex_file_path, const char* fragment_file_path)
 	glShaderSource(FragmentShaderID, 1, &FragmentSourcePointer , NULL);
 	glCompileShader(FragmentShaderID);
 	glGetShaderiv(FragmentShaderID, GL_COMPILE_STATUS, &Result);
-	//	if (Result == GL_TRUE) {
-	//		cout << "NOOO" << endl;
-	//		cout << FragmentSourcePointer << endl;
-	//	}
+		if (Result == GL_TRUE) {
+			std::cout << "NOOOF" << std::endl;
+			std::cout << FragmentSourcePointer << std::endl;
+		}
 	
  
 	// Link the program
@@ -87,6 +87,24 @@ SDL_Window* createWindow(const char* title, int x, int y, int w, int h, Uint32 f
 	return window;
 }
 
+void LoadTextures(GLuint textures[], const char* filename, const GLchar* texName, GLuint shaderProgram, int texNum) {
+	int width, height;
+	unsigned char* image;
+	
+	glActiveTexture(GL_TEXTURE0 + texNum);
+	
+	glBindTexture(GL_TEXTURE_2D, textures[texNum]);
+	image = SOIL_load_image(filename, &width, &height, 0, SOIL_LOAD_RGB);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, image);
+	SOIL_free_image_data(image);
+	glUniform1i(glGetUniformLocation(shaderProgram, "backGround"), texNum);
+	
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+}
+
 int main() {
 	SDL_Window* window = createWindow("Euchre", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 800, 600, SDL_WINDOW_OPENGL);
 	SDL_GLContext context = SDL_GL_CreateContext(window);
@@ -97,6 +115,56 @@ int main() {
 	
 	// Initialize Depth Testing
 	glEnable(GL_DEPTH_TEST);
+	
+	// Create Vertex Array Object
+	GLuint vao;
+	glGenVertexArrays(1, &vao);
+	glBindVertexArray(vao);
+	
+	// Create a Vertex Buffer Object and copy the vertex data to it
+	GLuint vbo;
+	glGenBuffers(1, &vbo);
+	
+	glBindBuffer(GL_ARRAY_BUFFER, vbo);
+	
+	GLuint shaderProgram = LoadShaders("./Resources/vertexShader.txt", "./Resources/fragmentShader.txt");
+	glUseProgram(shaderProgram);
+	
+	GLint texAttrib = glGetAttribLocation(shaderProgram, "texcoord");
+	glEnableVertexAttribArray(texAttrib);
+	glVertexAttribPointer(texAttrib, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat), reinterpret_cast<void*>(6 * sizeof(GLfloat)));
+	
+	// Load texture
+	GLuint textures[1];
+	glGenTextures(1, textures);
+	
+	LoadTextures(textures, "./Resources/Background.png", "backGround", shaderProgram, 0);
+	
+	SDL_Event windowEvent;
+	while (true) {
+		if (SDL_PollEvent(&windowEvent)) {
+			if (windowEvent.type == SDL_QUIT) {
+				break;
+			}
+		}
+		
+		// Clear screen to black
+		glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+		
+		
+		
+		SDL_GL_SwapWindow(window);
+	}
+	glDeleteTextures(2, textures);
+	
+	glDeleteProgram(shaderProgram);
+	
+	glDeleteBuffers(1, &vbo);
+	
+	glDeleteVertexArrays(1, &vao);
+	
+	SDL_GL_DeleteContext(context);
 	
 	return 0;
 }

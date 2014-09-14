@@ -14,6 +14,7 @@
 #include "glm.hpp"
 #include <iostream>
 #include <fstream>
+#include <vector>
 
 GLuint LoadShaders(const char* vertex_file_path, const char* fragment_file_path) {
  
@@ -87,13 +88,13 @@ SDL_Window* createWindow(const char* title, int x, int y, int w, int h, Uint32 f
 	return window;
 }
 
-void LoadTextures(GLuint textures[], const char* filename, const char* texName, GLuint shaderProgram, int texNum) {
+void LoadTextures(std::vector<GLuint> textures, const char* filename, const char* texName, GLuint shaderProgram, int texNum) {
 	int width, height;
 	unsigned char* image;
 	
 	glActiveTexture(GL_TEXTURE0 + texNum);
 	
-	glBindTexture(GL_TEXTURE_2D, textures[texNum]);
+	glBindTexture(GL_TEXTURE_2D, textures.at(texNum));
 	image = SOIL_load_image(filename, &width, &height, 0, SOIL_LOAD_RGB);
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, image);
 	SOIL_free_image_data(image);
@@ -163,7 +164,8 @@ int main() {
 	glEnableVertexAttribArray(texAttrib);
 	glVertexAttribPointer(texAttrib, 2, GL_FLOAT, GL_FALSE, 7 * sizeof(GLfloat), reinterpret_cast<void*>(5 * sizeof(GLfloat)));
 	
-	GLuint textures[1];
+	std::vector<GLuint> textures(1,0);
+	glGenTextures(1, &textures.at(0));
 	
 	LoadTextures(textures, "./Resources/Background.png", "backGround", shaderProgram, 0);
 	
@@ -184,7 +186,7 @@ int main() {
 		
 		SDL_GL_SwapWindow(window);
 	}
-	glDeleteTextures(1, textures);
+	glDeleteTextures(textures.size(), &textures.at(0));
 	
 	glDeleteProgram(shaderProgram);
 	

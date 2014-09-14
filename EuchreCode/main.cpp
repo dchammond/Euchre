@@ -48,7 +48,7 @@ GLuint LoadShaders(const char* vertex_file_path, const char* fragment_file_path)
 	glShaderSource(VertexShaderID, 1, &VertexSourcePointer , NULL);
 	glCompileShader(VertexShaderID);
 	glGetShaderiv(VertexShaderID, GL_COMPILE_STATUS, &Result);
-		if (Result == GL_TRUE) {
+		if (Result == GL_FALSE) {
 			std::cout << "NOOOV" << std::endl;
 			std::cout << VertexSourcePointer << std::endl;
 		}
@@ -59,7 +59,7 @@ GLuint LoadShaders(const char* vertex_file_path, const char* fragment_file_path)
 	glShaderSource(FragmentShaderID, 1, &FragmentSourcePointer , NULL);
 	glCompileShader(FragmentShaderID);
 	glGetShaderiv(FragmentShaderID, GL_COMPILE_STATUS, &Result);
-		if (Result == GL_TRUE) {
+		if (Result == GL_FALSE) {
 			std::cout << "NOOOF" << std::endl;
 			std::cout << FragmentSourcePointer << std::endl;
 		}
@@ -125,21 +125,39 @@ int main() {
 	GLuint vbo;
 	glGenBuffers(1, &vbo);
 	
+	GLfloat vertices[] = {
+		-0.5f,  0.5f, 1.0f, 0.0f, 0.0f, // Top-left
+		0.5f,  0.5f, 0.0f, 1.0f, 0.0f, // Top-right
+		0.5f, -0.5f, 0.0f, 0.0f, 1.0f, // Bottom-right
+		-0.5f, -0.5f, 1.0f, 1.0f, 1.0f  // Bottom-left
+	};
+	
 	glBindBuffer(GL_ARRAY_BUFFER, vbo);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+	
+	// Create an element array
+	GLuint ebo;
+	glGenBuffers(1, &ebo);
+	
+	GLuint elements[] = {
+		0, 1, 2,
+		2, 3, 0
+	};
+	
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(elements), elements, GL_STATIC_DRAW);
 	
 	GLuint shaderProgram = LoadShaders("./Resources/vertexShader.txt", "./Resources/fragmentShader.txt");
 	glUseProgram(shaderProgram);
 	
-	GLint texAttrib = glGetAttribLocation(shaderProgram, "texcoord");
-	glEnableVertexAttribArray(texAttrib);
-	glVertexAttribPointer(texAttrib, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat), reinterpret_cast<void*>(6 * sizeof(GLfloat)));
+	// Specify the layout of the vertex data
+	GLint posAttrib = glGetAttribLocation(shaderProgram, "position");
+	glEnableVertexAttribArray(posAttrib);
+	glVertexAttribPointer(posAttrib, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(GLfloat), 0);
 	
-	// Load texture
-	GLuint textures[1];
-	glGenTextures(1, textures);
-	
-	LoadTextures(textures, "./Resources/Background.png", "backGround", shaderProgram, 0);
-	
+	GLint colAttrib = glGetAttribLocation(shaderProgram, "color");
+	glEnableVertexAttribArray(colAttrib);
+	glVertexAttribPointer(colAttrib, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(GLfloat), (void*)(2 * sizeof(GLfloat)));
 	SDL_Event windowEvent;
 	while (true) {
 		if (SDL_PollEvent(&windowEvent)) {
@@ -148,23 +166,22 @@ int main() {
 			}
 		}
 		
-		// Clear screen to black
-		glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
+		// Clear the screen to black
+		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 		
-		
+		// Draw a rectangle from the 2 triangles using 6 indices
+		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 		
 		SDL_GL_SwapWindow(window);
 	}
-	glDeleteTextures(2, textures);
-	
 	glDeleteProgram(shaderProgram);
 	
+	glDeleteBuffers(1, &ebo);
 	glDeleteBuffers(1, &vbo);
 	
 	glDeleteVertexArrays(1, &vao);
 	
 	SDL_GL_DeleteContext(context);
-	
 	return 0;
 }

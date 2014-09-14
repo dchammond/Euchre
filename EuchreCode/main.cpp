@@ -184,6 +184,8 @@ int main() {
 		
 		SDL_GL_SwapWindow(window);
 	}
+	glDeleteTextures(1, textures);
+	
 	glDeleteProgram(shaderProgram);
 	
 	glDeleteBuffers(1, &ebo);

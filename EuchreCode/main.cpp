@@ -87,7 +87,7 @@ SDL_Window* createWindow(const char* title, int x, int y, int w, int h, Uint32 f
 	return window;
 }
 
-void LoadTextures(GLuint textures[], const char* filename, const GLchar* texName, GLuint shaderProgram, int texNum) {
+void LoadTextures(GLuint textures[], const char* filename, const char* texName, GLuint shaderProgram, int texNum) {
 	int width, height;
 	unsigned char* image;
 	
@@ -162,6 +162,10 @@ int main() {
 	GLint texAttrib = glGetAttribLocation(shaderProgram, "texcoord");
 	glEnableVertexAttribArray(texAttrib);
 	glVertexAttribPointer(texAttrib, 2, GL_FLOAT, GL_FALSE, 7 * sizeof(GLfloat), reinterpret_cast<void*>(5 * sizeof(GLfloat)));
+	
+	GLuint textures[1];
+		
+	LoadTextures(textures, "./Resources/Background.png", "backGround", shaderProgram, 0);
 	
 	SDL_Event windowEvent;
 	while (true) {

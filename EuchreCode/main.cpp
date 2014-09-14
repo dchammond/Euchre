@@ -139,7 +139,7 @@ int main() {
 	GLuint ebo;
 	glGenBuffers(1, &ebo);
 	
-	GLuint elements[] = {
+	GLuint elements[] = { // Describes which set of points are drawn each time
 		0, 1, 2,
 		2, 3, 0
 	};

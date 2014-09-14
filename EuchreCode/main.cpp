@@ -164,7 +164,7 @@ int main() {
 	glVertexAttribPointer(texAttrib, 2, GL_FLOAT, GL_FALSE, 7 * sizeof(GLfloat), reinterpret_cast<void*>(5 * sizeof(GLfloat)));
 	
 	GLuint textures[1];
-		
+	
 	LoadTextures(textures, "./Resources/Background.png", "backGround", shaderProgram, 0);
 	
 	SDL_Event windowEvent;

@@ -186,7 +186,7 @@ int main() {
 		
 		SDL_GL_SwapWindow(window);
 	}
-	glDeleteTextures(textures.size(), &textures.at(0));
+	glDeleteTextures(static_cast<GLsizei>(textures.size()), &textures.at(0));
 	
 	glDeleteProgram(shaderProgram);
 	

@@ -1,0 +1,4 @@
+-1.0f, +1.0f, +1.0f, +1.0f, +1.0f, +0.0f, +0.0f, // Top-left (x,y,r,g,b,Tx,Ty)
++1.0f, +1.0f, +1.0f, +1.0f, +1.0f, +1.0f, +0.0f, // Top-right (x,y,r,g,b,Tx,Ty)
++1.0f, -1.0f, +1.0f, +1.0f, +1.0f, +1.0f, +1.0f, // Bottom-right (x,y,r,g,b,Tx,Ty)
+-1.0f, -1.0f, +1.0f, +1.0f, +1.0f, +0.0f, +1.0f  // Bottom-left (x,y,r,g,b,Tx,Ty)

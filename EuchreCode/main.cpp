@@ -126,10 +126,10 @@ int main() {
 	glGenBuffers(1, &vbo);
 	
 	GLfloat vertices[] = {
-		-0.5f,  0.5f, 1.0f, 0.0f, 0.0f, // Top-left
-		0.5f,  0.5f, 0.0f, 1.0f, 0.0f, // Top-right
-		0.5f, -0.5f, 0.0f, 0.0f, 1.0f, // Bottom-right
-		-0.5f, -0.5f, 1.0f, 1.0f, 1.0f  // Bottom-left
+		-0.5f,  0.5f, 1.0f, 0.0f, 0.0f, // Top-left (x,y,r,g,b)
+		0.5f,  0.5f, 0.0f, 1.0f, 0.0f, // Top-right (x,y,r,g,b)
+		0.5f, -0.5f, 0.0f, 0.0f, 1.0f, // Bottom-right (x,y,r,g,b)
+		-0.5f, -0.5f, 1.0f, 1.0f, 1.0f  // Bottom-left (x,y,r,g,b)
 	};
 	
 	glBindBuffer(GL_ARRAY_BUFFER, vbo);

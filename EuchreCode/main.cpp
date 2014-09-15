@@ -108,7 +108,7 @@ void LoadTextures(std::vector<GLuint> textures, const char* filename, const char
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 }
 
-std::vector<float> LoadVertices(const char* file_path) {
+std::vector<float> LoadData(const char* file_path) {
 	// Read Vertices in from a file
 	std::vector<float> vertices;
 	std::string fileCode;
@@ -144,7 +144,7 @@ int main() {
 	glGenBuffers(1, &positionBuffer);
 	glBindBuffer(GL_ARRAY_BUFFER, positionBuffer);
 	
-	std::vector<float> bgPosition = LoadVertices("./Resources/bgPosition.txt");
+	std::vector<float> bgPosition = LoadData("./Resources/bgPosition.txt");
 	
 	glBufferData(GL_ARRAY_BUFFER, bgPosition.size() * sizeof(float), &bgPosition.at(0), GL_STATIC_DRAW);
 	
@@ -153,7 +153,7 @@ int main() {
 	glGenBuffers(1, &colorBuffer);
 	glBindBuffer(GL_ARRAY_BUFFER, colorBuffer);
 	
-	std::vector<float> bgColor = LoadVertices("./Resources/bgColor.txt");
+	std::vector<float> bgColor = LoadData("./Resources/bgColor.txt");
 	
 	glBufferData(GL_ARRAY_BUFFER, bgColor.size() * sizeof(float), &bgColor.at(0), GL_STATIC_DRAW);
 	
@@ -162,7 +162,7 @@ int main() {
 	glGenBuffers(1, &textureBuffer);
 	glBindBuffer(GL_ARRAY_BUFFER, textureBuffer);
 
-	std::vector<float> bgTexture = LoadVertices("./Resources/bgTexture.txt");
+	std::vector<float> bgTexture = LoadData("./Resources/bgTexture.txt");
 	
 	glBufferData(GL_ARRAY_BUFFER, bgTexture.size() * sizeof(float), &bgTexture.at(0), GL_STATIC_DRAW);
 	

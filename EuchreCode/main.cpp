@@ -201,8 +201,8 @@ int main() {
 	glBindBuffer(GL_ARRAY_BUFFER, textureBuffer);
 	glVertexAttribPointer(texAttrib, 2, GL_FLOAT, GL_FALSE, 0, 0);
 
-	std::vector<GLuint> textures(1,0);
-	LoadTextures(textures, "./Resources/Background.png", "backGround", shaderProgram, 0);
+	std::vector<GLuint> textures(1,0); // Creates vector with one copy of a zero
+	LoadTextures(textures, "./Resources/Background.png", "backGround", shaderProgram, 0); // Binds the background texture to the single number in vector textures
 	
 	SDL_Event windowEvent;
 	while (true) {

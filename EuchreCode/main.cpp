@@ -150,33 +150,29 @@ int main() {
 	glGenVertexArrays(1, &vao);
 	glBindVertexArray(vao);
 	
-	// Create a vector populated by text file data
+	// Create a vector populated by text file data that describes the coordinates of the triangles to be drawn
 	std::vector<float> bgPosition = LoadData<float>("./Resources/bgPosition.txt");
 	
 	// Create a Position Buffer Object and copy the vector data to it
 	GLuint positionBuffer = makeBufferObject(1, GL_ARRAY_BUFFER, GL_STATIC_DRAW, bgPosition);
 	
-	// Create a vector populated by text file data
+	// Create a vector populated by text file data that has the color of the triangles to be drawn
 	std::vector<float> bgColor = LoadData<float>("./Resources/bgColor.txt");
 	
 	// Create a Color Buffer Object and copy the vector data to it
 	GLuint colorBuffer = makeBufferObject(1, GL_ARRAY_BUFFER, GL_STATIC_DRAW, bgColor);
 	
-	// Create a vector populated by text file data
+	// Create a vector populated by text file data that has the location of the texture image
 	std::vector<float> bgTexture = LoadData<float>("./Resources/bgTexture.txt");
 	
 	// Create a Texture Buffer Object and copy the vector data to it
 	GLuint textureBuffer = makeBufferObject(1, GL_ARRAY_BUFFER, GL_STATIC_DRAW, bgTexture);
 	
-	// Create an element array
-	GLuint ebo;
-	glGenBuffers(1, &ebo);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
-	
-	// Describes which set of points is drawn at each time
+	// Create a vector populated by text file data that describes the order that an object is drawn in
 	std::vector<GLuint> drawOrder = LoadData<GLuint>("./Resources/drawOrder.txt");
 	
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, drawOrder.size() * sizeof(float), &drawOrder.at(0), GL_STATIC_DRAW);
+	// Create an Element Buffer Object and copy the vector data to it
+	GLuint elementBuffer = makeBufferObject(1, GL_ELEMENT_ARRAY_BUFFER, GL_STATIC_DRAW, drawOrder);
 	
 	GLuint shaderProgram = LoadShaders("./Resources/vertexShader.txt", "./Resources/fragmentShader.txt");
 	glUseProgram(shaderProgram);
@@ -225,8 +221,10 @@ int main() {
 	
 	glDeleteProgram(shaderProgram);
 	
-	glDeleteBuffers(1, &ebo);
+	glDeleteBuffers(1, &elementBuffer);
 	glDeleteBuffers(1, &positionBuffer);
+	glDeleteBuffers(1, &colorBuffer);
+	glDeleteBuffers(1, &textureBuffer);
 	
 	glDeleteVertexArrays(1, &vao);
 	

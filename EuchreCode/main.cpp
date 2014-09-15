@@ -108,9 +108,10 @@ void LoadTextures(std::vector<GLuint> textures, const char* filename, const char
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 }
 
-std::vector<float> LoadData(const char* file_path) {
+template<class T>
+std::vector<T> LoadData(const char* file_path) {
 	// Read Vertices in from a file
-	std::vector<float> vertices;
+	std::vector<T> vertices;
 	std::string fileCode;
 	std::ifstream fileStream;
 	fileStream.open(file_path);
@@ -144,7 +145,7 @@ int main() {
 	glGenBuffers(1, &positionBuffer);
 	glBindBuffer(GL_ARRAY_BUFFER, positionBuffer);
 	
-	std::vector<float> bgPosition = LoadData("./Resources/bgPosition.txt");
+	std::vector<float> bgPosition = LoadData<float>("./Resources/bgPosition.txt");
 	
 	glBufferData(GL_ARRAY_BUFFER, bgPosition.size() * sizeof(float), &bgPosition.at(0), GL_STATIC_DRAW);
 	
@@ -153,7 +154,7 @@ int main() {
 	glGenBuffers(1, &colorBuffer);
 	glBindBuffer(GL_ARRAY_BUFFER, colorBuffer);
 	
-	std::vector<float> bgColor = LoadData("./Resources/bgColor.txt");
+	std::vector<float> bgColor = LoadData<float>("./Resources/bgColor.txt");
 	
 	glBufferData(GL_ARRAY_BUFFER, bgColor.size() * sizeof(float), &bgColor.at(0), GL_STATIC_DRAW);
 	
@@ -162,7 +163,7 @@ int main() {
 	glGenBuffers(1, &textureBuffer);
 	glBindBuffer(GL_ARRAY_BUFFER, textureBuffer);
 
-	std::vector<float> bgTexture = LoadData("./Resources/bgTexture.txt");
+	std::vector<float> bgTexture = LoadData<float>("./Resources/bgTexture.txt");
 	
 	glBufferData(GL_ARRAY_BUFFER, bgTexture.size() * sizeof(float), &bgTexture.at(0), GL_STATIC_DRAW);
 	
@@ -172,8 +173,7 @@ int main() {
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
 	
 	// Describes which set of points is drawn at each time
-	std::vector<float> drawOrders = LoadData("./Resources/drawOrder.txt");
-	std::vector<GLuint> drawOrder(drawOrders.begin(), drawOrders.end()); // If drawOrder is not a GLuint (if it is a float) then the code does not work (nothing renders)
+	std::vector<GLuint> drawOrder = LoadData<GLuint>("./Resources/drawOrder.txt");
 	
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, drawOrder.size() * sizeof(float), &drawOrder.at(0), GL_STATIC_DRAW);
 	

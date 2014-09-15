@@ -127,6 +127,16 @@ std::vector<vecTYPE> LoadData(const char* file_path) {
 	return vertices;
 }
 
+template<class vecTYPE> // Redefine new vecTYPE
+GLuint makeBufferObject(GLsizei numBuffers, GLenum target, GLenum usage, std::vector<vecTYPE> data) {
+	GLuint buffer;
+	glGenBuffers(numBuffers, &buffer);
+	glBindBuffer(target, buffer);
+	glBufferData(target, data.size() * sizeof(vecTYPE), &data.at(0), usage);
+	
+	return buffer;
+}
+
 int main() {
 	SDL_Window* window = createWindow("Euchre", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 800, 600, SDL_WINDOW_OPENGL);
 	SDL_GLContext context = SDL_GL_CreateContext(window);
@@ -140,32 +150,23 @@ int main() {
 	glGenVertexArrays(1, &vao);
 	glBindVertexArray(vao);
 	
-	// Create a Position Buffer Object and copy the vertex data to it
-	GLuint positionBuffer;
-	glGenBuffers(1, &positionBuffer);
-	glBindBuffer(GL_ARRAY_BUFFER, positionBuffer);
-	
+	// Create a vector populated by text file data
 	std::vector<float> bgPosition = LoadData<float>("./Resources/bgPosition.txt");
 	
-	glBufferData(GL_ARRAY_BUFFER, bgPosition.size() * sizeof(float), &bgPosition.at(0), GL_STATIC_DRAW);
+	// Create a Position Buffer Object and copy the vector data to it
+	GLuint positionBuffer = makeBufferObject(1, GL_ARRAY_BUFFER, GL_STATIC_DRAW, bgPosition);
 	
-	// Create a Color Buffer Object and copy the vertex data to it
-	GLuint colorBuffer;
-	glGenBuffers(1, &colorBuffer);
-	glBindBuffer(GL_ARRAY_BUFFER, colorBuffer);
-	
+	// Create a vector populated by text file data
 	std::vector<float> bgColor = LoadData<float>("./Resources/bgColor.txt");
 	
-	glBufferData(GL_ARRAY_BUFFER, bgColor.size() * sizeof(float), &bgColor.at(0), GL_STATIC_DRAW);
+	// Create a Color Buffer Object and copy the vector data to it
+	GLuint colorBuffer = makeBufferObject(1, GL_ARRAY_BUFFER, GL_STATIC_DRAW, bgColor);
 	
-	// Create a Texture Buffer Object and copy the vertex data to it
-	GLuint textureBuffer;
-	glGenBuffers(1, &textureBuffer);
-	glBindBuffer(GL_ARRAY_BUFFER, textureBuffer);
-
+	// Create a vector populated by text file data
 	std::vector<float> bgTexture = LoadData<float>("./Resources/bgTexture.txt");
 	
-	glBufferData(GL_ARRAY_BUFFER, bgTexture.size() * sizeof(float), &bgTexture.at(0), GL_STATIC_DRAW);
+	// Create a Texture Buffer Object and copy the vector data to it
+	GLuint textureBuffer = makeBufferObject(1, GL_ARRAY_BUFFER, GL_STATIC_DRAW, bgTexture);
 	
 	// Create an element array
 	GLuint ebo;

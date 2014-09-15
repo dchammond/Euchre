@@ -16,7 +16,7 @@
 #include <fstream>
 #include <vector>
 
-GLuint LoadShaders(const char* vertex_file_path, const char* fragment_file_path) {
+GLuint LoadShaders(const char* vertex_file_path, const char* fragment_file_path) { // Loads a vertex and fragment shader, returns a Shader Program called ProgramID
  
 	// Create the shaders
 	GLuint VertexShaderID = glCreateShader(GL_VERTEX_SHADER);
@@ -80,7 +80,7 @@ GLuint LoadShaders(const char* vertex_file_path, const char* fragment_file_path)
 	return ProgramID;
 }
 
-SDL_Window* createWindow(const char* title, int x, int y, int w, int h, Uint32 flags) {
+SDL_Window* createWindow(const char* title, int x, int y, int w, int h, Uint32 flags) { // Creates an SDL window context, returns the window
 	SDL_Init(SDL_INIT_VIDEO);
 	SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
 	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
@@ -90,7 +90,7 @@ SDL_Window* createWindow(const char* title, int x, int y, int w, int h, Uint32 f
 	return window;
 }
 
-void LoadTextures(std::vector<GLuint> textures, const char* filename, const char* texName, GLuint shaderProgram, int texNum) {
+void LoadTextures(std::vector<GLuint> textures, const char* filename, const char* texName, GLuint shaderProgram, int texNum) { // Loads textures and binds them to a position in textures
 	int width, height;
 	unsigned char* image;
 	
@@ -100,7 +100,7 @@ void LoadTextures(std::vector<GLuint> textures, const char* filename, const char
 	image = SOIL_load_image(filename, &width, &height, 0, SOIL_LOAD_RGB);
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, image);
 	SOIL_free_image_data(image);
-	glUniform1i(glGetUniformLocation(shaderProgram, "backGround"), texNum);
+	glUniform1i(glGetUniformLocation(shaderProgram, texName), texNum);
 	
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
@@ -109,7 +109,7 @@ void LoadTextures(std::vector<GLuint> textures, const char* filename, const char
 }
 
 template<class vecTYPE> // Allows for a vector of any type to be made and returned!
-std::vector<vecTYPE> LoadData(const char* file_path) {
+std::vector<vecTYPE> LoadData(const char* file_path) { // Loads a txt file of numbers (comma delimited) and turns them into the requested type and puts them into a vector, returns that vector
 	// Read Vertices in from a file
 	std::vector<vecTYPE> vertices;
 	std::string fileCode;
@@ -128,7 +128,7 @@ std::vector<vecTYPE> LoadData(const char* file_path) {
 }
 
 template<class vecTYPE> // Redefine new vecTYPE
-GLuint makeBufferObject(GLsizei numBuffers, GLenum target, GLenum usage, std::vector<vecTYPE> data) {
+GLuint makeBufferObject(GLsizei numBuffers, GLenum target, GLenum usage, std::vector<vecTYPE> data) { // Creates a buffer object, returns the buffer object
 	GLuint buffer;
 	glGenBuffers(numBuffers, &buffer);
 	glBindBuffer(target, buffer);
@@ -137,7 +137,7 @@ GLuint makeBufferObject(GLsizei numBuffers, GLenum target, GLenum usage, std::ve
 	return buffer;
 }
 
-GLuint makeVertexArrayObject(GLsizei numBuffers) {
+GLuint makeVertexArrayObject(GLsizei numBuffers) { // Creates a vertex array object, returns that vao
 	GLuint vao;
 	glGenVertexArrays(numBuffers, &vao);
 	glBindVertexArray(vao);

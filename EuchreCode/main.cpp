@@ -161,7 +161,7 @@ int main() {
 	GLuint textureBuffer;
 	glGenBuffers(1, &textureBuffer);
 	glBindBuffer(GL_ARRAY_BUFFER, textureBuffer);
-	
+
 	std::vector<float> bgTexture = LoadVertices("./Resources/bgTexture.txt");
 	
 	glBufferData(GL_ARRAY_BUFFER, bgTexture.size() * sizeof(float), &bgTexture.at(0), GL_STATIC_DRAW);

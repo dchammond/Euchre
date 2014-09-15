@@ -196,8 +196,6 @@ int main() {
 	glVertexAttribPointer(texAttrib, 2, GL_FLOAT, GL_FALSE, 0, 0);
 
 	std::vector<GLuint> textures(1,0);
-	glGenTextures(1, &textures.at(0));
-	
 	LoadTextures(textures, "./Resources/Background.png", "backGround", shaderProgram, 0);
 	
 	SDL_Event windowEvent;

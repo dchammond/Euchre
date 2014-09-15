@@ -137,6 +137,14 @@ GLuint makeBufferObject(GLsizei numBuffers, GLenum target, GLenum usage, std::ve
 	return buffer;
 }
 
+GLuint makeVertexArrayObject(GLsizei numBuffers) {
+	GLuint vao;
+	glGenVertexArrays(numBuffers, &vao);
+	glBindVertexArray(vao);
+	
+	return vao;
+}
+
 int main() {
 	SDL_Window* window = createWindow("Euchre", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 800, 600, SDL_WINDOW_OPENGL);
 	SDL_GLContext context = SDL_GL_CreateContext(window);
@@ -146,9 +154,7 @@ int main() {
 	glewInit();
 	
 	// Create Vertex Array Object
-	GLuint vao;
-	glGenVertexArrays(1, &vao);
-	glBindVertexArray(vao);
+	GLuint vertexArrayObject = makeVertexArrayObject(1);
 	
 	// Create a vector populated by text file data that describes the coordinates of the triangles to be drawn
 	std::vector<float> bgPosition = LoadData<float>("./Resources/bgPosition.txt");
@@ -225,7 +231,7 @@ int main() {
 	glDeleteBuffers(1, &colorBuffer);
 	glDeleteBuffers(1, &textureBuffer);
 	
-	glDeleteVertexArrays(1, &vao);
+	glDeleteVertexArrays(1, &vertexArrayObject);
 	
 	SDL_GL_DeleteContext(context);
 	return 0;

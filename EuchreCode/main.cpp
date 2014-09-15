@@ -219,6 +219,7 @@ int main() {
 	
 	glDeleteProgram(shaderProgram);
 	
+	// Delete all the buffers!
 	glDeleteBuffers(1, &elementBuffer);
 	glDeleteBuffers(1, &positionBuffer);
 	glDeleteBuffers(1, &colorBuffer);

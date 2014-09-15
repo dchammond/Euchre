@@ -145,6 +145,13 @@ GLuint makeVertexArrayObject(GLsizei numBuffers) { // Creates a vertex array obj
 	return vao;
 }
 
+void makeAttribute(GLuint shaderProgram, const char* attrib_name, GLenum target, GLuint targetBuffer, GLint size, GLenum type, GLboolean normalized, GLsizei stride, const GLvoid* pointer) {
+	GLint attribute = glGetAttribLocation(shaderProgram, attrib_name);
+	glEnableVertexAttribArray(attribute);
+	glBindBuffer(target, targetBuffer);
+	glVertexAttribPointer(attribute, size, type, normalized, stride, pointer);
+}
+
 int main() {
 	SDL_Window* window = createWindow("Euchre", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 800, 600, SDL_WINDOW_OPENGL);
 	SDL_GLContext context = SDL_GL_CreateContext(window);
@@ -184,23 +191,14 @@ int main() {
 	glUseProgram(shaderProgram);
 	
 	// Specify the layout of the vertex data
-	GLint posAttrib = glGetAttribLocation(shaderProgram, "position");
-	glEnableVertexAttribArray(posAttrib);
-	glBindBuffer(GL_ARRAY_BUFFER, positionBuffer);
-	glVertexAttribPointer(posAttrib, 2, GL_FLOAT, GL_FALSE, 0, 0);
+	makeAttribute(shaderProgram, "position", GL_ARRAY_BUFFER, positionBuffer, 2, GL_FLOAT, GL_FALSE, 0, 0);
 	
 	// Specify the color attributes
-	GLint colAttrib = glGetAttribLocation(shaderProgram, "color");
-	glEnableVertexAttribArray(colAttrib);
-	glBindBuffer(GL_ARRAY_BUFFER, colorBuffer);
-	glVertexAttribPointer(colAttrib, 3, GL_FLOAT, GL_FALSE, 0, 0);
-
+	makeAttribute(shaderProgram, "color", GL_ARRAY_BUFFER, colorBuffer, 3, GL_FLOAT, GL_FALSE, 0, 0);
+	
 	// Specifiy the texture usage
-	GLint texAttrib = glGetAttribLocation(shaderProgram, "texcoord");
-	glEnableVertexAttribArray(texAttrib);
-	glBindBuffer(GL_ARRAY_BUFFER, textureBuffer);
-	glVertexAttribPointer(texAttrib, 2, GL_FLOAT, GL_FALSE, 0, 0);
-
+	makeAttribute(shaderProgram, "texcoord", GL_ARRAY_BUFFER, textureBuffer, 2, GL_FLOAT, GL_FALSE, 0, 0);
+	
 	std::vector<GLuint> textures(1,0); // Creates vector with one copy of a zero
 	LoadTextures(textures, "./Resources/Background.png", "backGround", shaderProgram, 0); // Binds the background texture to the single number in vector textures
 	

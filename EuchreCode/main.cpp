@@ -171,13 +171,11 @@ int main() {
 	glGenBuffers(1, &ebo);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
 	
-	GLuint elements[] = { // Describes which set of points are drawn each time
-		0, 1, 2,
-		2, 3, 0
-	};
+	// Describes which set of points is drawn at each time
+	std::vector<float> drawOrders = LoadData("./Resources/drawOrder.txt");
+	std::vector<GLuint> drawOrder(drawOrders.begin(), drawOrders.end()); // If drawOrder is not a GLuint (if it is a float) then the code does not work (nothing renders)
 	
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(elements), elements, GL_STATIC_DRAW);
-	
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, drawOrder.size() * sizeof(float), &drawOrder.at(0), GL_STATIC_DRAW);
 	
 	GLuint shaderProgram = LoadShaders("./Resources/vertexShader.txt", "./Resources/fragmentShader.txt");
 	glUseProgram(shaderProgram);

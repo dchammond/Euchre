@@ -108,10 +108,10 @@ void LoadTextures(std::vector<GLuint> textures, const char* filename, const char
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 }
 
-template<class T>
-std::vector<T> LoadData(const char* file_path) {
+template<class vecTYPE> // Allows for a vector of any type to be made and returned!
+std::vector<vecTYPE> LoadData(const char* file_path) {
 	// Read Vertices in from a file
-	std::vector<T> vertices;
+	std::vector<vecTYPE> vertices;
 	std::string fileCode;
 	std::ifstream fileStream;
 	fileStream.open(file_path);
@@ -119,8 +119,8 @@ std::vector<T> LoadData(const char* file_path) {
 		std::string Line;
 		while(getline(fileStream, Line, ',')) {
 			fileCode = Line;
-			float numRead = std::stof(fileCode);
-			vertices.push_back(numRead);
+			float numRead = std::stof(fileCode); // std::stof converts a string to a float
+			vertices.push_back(numRead); // When the value is pushed to the vertex, it is casted automatically
 		}
 		fileStream.close();
 	}

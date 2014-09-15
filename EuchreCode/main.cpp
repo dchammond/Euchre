@@ -129,41 +129,55 @@ std::vector<float> LoadVertices(const char* file_path) {
 int main() {
 	SDL_Window* window = createWindow("Euchre", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 800, 600, SDL_WINDOW_OPENGL);
 	SDL_GLContext context = SDL_GL_CreateContext(window);
-	
+
 	// Initialize GLEW
 	glewExperimental = GL_TRUE;
 	glewInit();
-	
-	// Initialize Depth Testing
-//	glEnable(GL_DEPTH_TEST);
 	
 	// Create Vertex Array Object
 	GLuint vao;
 	glGenVertexArrays(1, &vao);
 	glBindVertexArray(vao);
 	
-	// Create a Vertex Buffer Object and copy the vertex data to it
-	GLuint vbo;
-	glGenBuffers(1, &vbo);
+	// Create a Position Buffer Object and copy the vertex data to it
+	GLuint positionBuffer;
+	glGenBuffers(1, &positionBuffer);
+	glBindBuffer(GL_ARRAY_BUFFER, positionBuffer);
 	
 	std::vector<float> bgPosition = LoadVertices("./Resources/bgPosition.txt");
-	std::vector<float> bgColor = LoadVertices("./Resources/bgColor.txt");
-//	std::vector<float> bgTexture = LoadVertices("./Resources/bgTexture.txt");
 	
-	glBindBuffer(GL_ARRAY_BUFFER, vbo);
 	glBufferData(GL_ARRAY_BUFFER, bgPosition.size() * sizeof(float), &bgPosition.at(0), GL_STATIC_DRAW);
+	
+	// Create a Color Buffer Object and copy the vertex data to it
+	GLuint colorBuffer;
+	glGenBuffers(1, &colorBuffer);
+	glBindBuffer(GL_ARRAY_BUFFER, colorBuffer);
+	
+	std::vector<float> bgColor = LoadVertices("./Resources/bgColor.txt");
+	
+	glBufferData(GL_ARRAY_BUFFER, bgColor.size() * sizeof(float), &bgColor.at(0), GL_STATIC_DRAW);
+	
+	// Create a Texture Buffer Object and copy the vertex data to it
+	GLuint textureBuffer;
+	glGenBuffers(1, &textureBuffer);
+	glBindBuffer(GL_ARRAY_BUFFER, textureBuffer);
+	
+	std::vector<float> bgTexture = LoadVertices("./Resources/bgTexture.txt");
+	
+	glBufferData(GL_ARRAY_BUFFER, bgTexture.size() * sizeof(float), &bgTexture.at(0), GL_STATIC_DRAW);
 	
 	// Create an element array
 	GLuint ebo;
 	glGenBuffers(1, &ebo);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
 	
 	GLuint elements[] = { // Describes which set of points are drawn each time
 		0, 1, 2,
 		2, 3, 0
 	};
 	
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(elements), elements, GL_STATIC_DRAW);
+	
 	
 	GLuint shaderProgram = LoadShaders("./Resources/vertexShader.txt", "./Resources/fragmentShader.txt");
 	glUseProgram(shaderProgram);
@@ -171,21 +185,25 @@ int main() {
 	// Specify the layout of the vertex data
 	GLint posAttrib = glGetAttribLocation(shaderProgram, "position");
 	glEnableVertexAttribArray(posAttrib);
+	glBindBuffer(GL_ARRAY_BUFFER, positionBuffer);
 	glVertexAttribPointer(posAttrib, 2, GL_FLOAT, GL_FALSE, 0, 0);
 	
+	// Specify the color attributes
 	GLint colAttrib = glGetAttribLocation(shaderProgram, "color");
 	glEnableVertexAttribArray(colAttrib);
-	glVertexAttribPointer(colAttrib, 3, GL_FLOAT, GL_TRUE, 0, 0);
-	
-	/*
+	glBindBuffer(GL_ARRAY_BUFFER, colorBuffer);
+	glVertexAttribPointer(colAttrib, 3, GL_FLOAT, GL_FALSE, 0, 0);
+
+	// Specifiy the texture usage
 	GLint texAttrib = glGetAttribLocation(shaderProgram, "texcoord");
 	glEnableVertexAttribArray(texAttrib);
+	glBindBuffer(GL_ARRAY_BUFFER, textureBuffer);
 	glVertexAttribPointer(texAttrib, 2, GL_FLOAT, GL_FALSE, 0, 0);
-	*/
+
 	std::vector<GLuint> textures(1,0);
 	glGenTextures(1, &textures.at(0));
 	
-//	LoadTextures(textures, "./Resources/Background.png", "backGround", shaderProgram, 0);
+	LoadTextures(textures, "./Resources/Background.png", "backGround", shaderProgram, 0);
 	
 	SDL_Event windowEvent;
 	while (true) {
@@ -200,16 +218,16 @@ int main() {
 		glClear(GL_COLOR_BUFFER_BIT);
 		
 		// Draw a rectangle from the 2 triangles using 6 indices
-		glDrawElements(GL_TRIANGLES, static_cast<GLsizei>(bgPosition.size()), GL_UNSIGNED_INT, 0);
+		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 		
 		SDL_GL_SwapWindow(window);
 	}
-//	glDeleteTextures(static_cast<GLsizei>(textures.size()), &textures.at(0)); // Casted to remove warning about precision loss (this doesn't matter)
+	glDeleteTextures(static_cast<GLsizei>(textures.size()), &textures.at(0)); // Casted to remove warning about precision loss (this doesn't matter)
 	
 	glDeleteProgram(shaderProgram);
 	
 	glDeleteBuffers(1, &ebo);
-	glDeleteBuffers(1, &vbo);
+	glDeleteBuffers(1, &positionBuffer);
 	
 	glDeleteVertexArrays(1, &vao);
 	

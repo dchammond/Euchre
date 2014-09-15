@@ -14,7 +14,6 @@
 #include "glm.hpp"
 #include <iostream>
 #include <fstream>
-#include <sstream>
 #include <vector>
 
 GLuint LoadShaders(const char* vertex_file_path, const char* fragment_file_path) {
@@ -136,7 +135,7 @@ int main() {
 	glewInit();
 	
 	// Initialize Depth Testing
-	glEnable(GL_DEPTH_TEST);
+//	glEnable(GL_DEPTH_TEST);
 	
 	// Create Vertex Array Object
 	GLuint vao;
@@ -147,17 +146,12 @@ int main() {
 	GLuint vbo;
 	glGenBuffers(1, &vbo);
 	
-	std::vector<float> bgPoints = LoadVertices("./Resources/bgVertices");
-	
-	GLfloat vertices[] = {
-		-1.0f,  1.0f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f, // Top-left (x,y,r,g,b,Tx,Ty)
-		1.0f,  1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f, // Top-right (x,y,r,g,b,Tx,Ty)
-		1.0f, -1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, // Bottom-right (x,y,r,g,b,Tx,Ty)
-		-1.0f, -1.0f, 1.0f, 1.0f, 1.0f, 0.0f, 1.0f  // Bottom-left (x,y,r,g,b,Tx,Ty)
-	};
+	std::vector<float> bgPosition = LoadVertices("./Resources/bgPosition.txt");
+	std::vector<float> bgColor = LoadVertices("./Resources/bgColor.txt");
+//	std::vector<float> bgTexture = LoadVertices("./Resources/bgTexture.txt");
 	
 	glBindBuffer(GL_ARRAY_BUFFER, vbo);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, bgPosition.size() * sizeof(float), &bgPosition.at(0), GL_STATIC_DRAW);
 	
 	// Create an element array
 	GLuint ebo;
@@ -177,20 +171,21 @@ int main() {
 	// Specify the layout of the vertex data
 	GLint posAttrib = glGetAttribLocation(shaderProgram, "position");
 	glEnableVertexAttribArray(posAttrib);
-	glVertexAttribPointer(posAttrib, 2, GL_FLOAT, GL_FALSE, 7 * sizeof(GLfloat), 0);
+	glVertexAttribPointer(posAttrib, 2, GL_FLOAT, GL_FALSE, 0, 0);
 	
 	GLint colAttrib = glGetAttribLocation(shaderProgram, "color");
 	glEnableVertexAttribArray(colAttrib);
-	glVertexAttribPointer(colAttrib, 3, GL_FLOAT, GL_FALSE, 7 * sizeof(GLfloat), reinterpret_cast<void*>(2 * sizeof(GLfloat)));
+	glVertexAttribPointer(colAttrib, 3, GL_FLOAT, GL_TRUE, 0, 0);
 	
+	/*
 	GLint texAttrib = glGetAttribLocation(shaderProgram, "texcoord");
 	glEnableVertexAttribArray(texAttrib);
-	glVertexAttribPointer(texAttrib, 2, GL_FLOAT, GL_FALSE, 7 * sizeof(GLfloat), reinterpret_cast<void*>(5 * sizeof(GLfloat)));
-	
+	glVertexAttribPointer(texAttrib, 2, GL_FLOAT, GL_FALSE, 0, 0);
+	*/
 	std::vector<GLuint> textures(1,0);
 	glGenTextures(1, &textures.at(0));
 	
-	LoadTextures(textures, "./Resources/Background.png", "backGround", shaderProgram, 0);
+//	LoadTextures(textures, "./Resources/Background.png", "backGround", shaderProgram, 0);
 	
 	SDL_Event windowEvent;
 	while (true) {
@@ -202,14 +197,14 @@ int main() {
 		
 		// Clear the screen to black
 		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+		glClear(GL_COLOR_BUFFER_BIT);
 		
 		// Draw a rectangle from the 2 triangles using 6 indices
-		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+		glDrawElements(GL_TRIANGLES, static_cast<GLsizei>(bgPosition.size()), GL_UNSIGNED_INT, 0);
 		
 		SDL_GL_SwapWindow(window);
 	}
-	glDeleteTextures(static_cast<GLsizei>(textures.size()), &textures.at(0));
+//	glDeleteTextures(static_cast<GLsizei>(textures.size()), &textures.at(0)); // Casted to remove warning about precision loss (this doesn't matter)
 	
 	glDeleteProgram(shaderProgram);
 	

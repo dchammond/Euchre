@@ -16,7 +16,7 @@
 #include <fstream>
 #include <vector>
 
-GLuint LoadShaders(const char* vertex_file_path, const char* fragment_file_path) {
+GLuint LoadShaders(const char* vertex_file_path, const char* fragment_file_path) { // Loads a vertex and fragment shader, returns a Shader Program called ProgramID
  
 	// Create the shaders
 	GLuint VertexShaderID = glCreateShader(GL_VERTEX_SHADER);
@@ -80,7 +80,7 @@ GLuint LoadShaders(const char* vertex_file_path, const char* fragment_file_path)
 	return ProgramID;
 }
 
-SDL_Window* createWindow(const char* title, int x, int y, int w, int h, Uint32 flags) {
+SDL_Window* createWindow(const char* title, int x, int y, int w, int h, Uint32 flags) { // Creates an SDL window context, returns the window
 	SDL_Init(SDL_INIT_VIDEO);
 	SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
 	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
@@ -90,7 +90,7 @@ SDL_Window* createWindow(const char* title, int x, int y, int w, int h, Uint32 f
 	return window;
 }
 
-void LoadTextures(std::vector<GLuint> textures, const char* filename, const char* texName, GLuint shaderProgram, int texNum) {
+void LoadTextures(std::vector<GLuint> textures, const char* filename, const char* texName, GLuint shaderProgram, int texNum) { // Loads textures and binds them to a position in textures
 	int width, height;
 	unsigned char* image;
 	
@@ -100,7 +100,7 @@ void LoadTextures(std::vector<GLuint> textures, const char* filename, const char
 	image = SOIL_load_image(filename, &width, &height, 0, SOIL_LOAD_RGB);
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, image);
 	SOIL_free_image_data(image);
-	glUniform1i(glGetUniformLocation(shaderProgram, "backGround"), texNum);
+	glUniform1i(glGetUniformLocation(shaderProgram, texName), texNum);
 	
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
@@ -108,9 +108,10 @@ void LoadTextures(std::vector<GLuint> textures, const char* filename, const char
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 }
 
-std::vector<float> LoadVertices(const char* file_path) {
+template<class vecTYPE> // Allows for a vector of any type to be made and returned!
+std::vector<vecTYPE> LoadData(const char* file_path) { // Loads a txt file of numbers (comma delimited) and turns them into the requested type and puts them into a vector, returns that vector
 	// Read Vertices in from a file
-	std::vector<float> vertices;
+	std::vector<vecTYPE> vertices;
 	std::string fileCode;
 	std::ifstream fileStream;
 	fileStream.open(file_path);
@@ -118,12 +119,37 @@ std::vector<float> LoadVertices(const char* file_path) {
 		std::string Line;
 		while(getline(fileStream, Line, ',')) {
 			fileCode = Line;
-			float numRead = std::stof(fileCode);
-			vertices.push_back(numRead);
+			float numRead = std::stof(fileCode); // std::stof converts a string to a float
+			vertices.push_back(numRead); // When the value is pushed to the vertex, it is casted automatically
 		}
 		fileStream.close();
 	}
 	return vertices;
+}
+
+template<class vecTYPE> // Redefine new vecTYPE
+GLuint makeBufferObject(GLsizei numBuffers, GLenum target, GLenum usage, std::vector<vecTYPE> data) { // Creates a buffer object, returns the buffer object
+	GLuint buffer;
+	glGenBuffers(numBuffers, &buffer);
+	glBindBuffer(target, buffer);
+	glBufferData(target, data.size() * sizeof(vecTYPE), &data.at(0), usage);
+	
+	return buffer;
+}
+
+GLuint makeVertexArrayObject(GLsizei numBuffers) { // Creates a vertex array object, returns that vao
+	GLuint vao;
+	glGenVertexArrays(numBuffers, &vao);
+	glBindVertexArray(vao);
+	
+	return vao;
+}
+
+void makeAttribute(GLuint shaderProgram, const char* attrib_name, GLenum target, GLuint targetBuffer, GLint size, GLenum type, GLboolean normalized, GLsizei stride, const GLvoid* pointer) {
+	GLint attribute = glGetAttribLocation(shaderProgram, attrib_name);
+	glEnableVertexAttribArray(attribute);
+	glBindBuffer(target, targetBuffer);
+	glVertexAttribPointer(attribute, size, type, normalized, stride, pointer);
 }
 
 int main() {
@@ -135,75 +161,46 @@ int main() {
 	glewInit();
 	
 	// Create Vertex Array Object
-	GLuint vao;
-	glGenVertexArrays(1, &vao);
-	glBindVertexArray(vao);
+	GLuint vertexArrayObject = makeVertexArrayObject(1);
 	
-	// Create a Position Buffer Object and copy the vertex data to it
-	GLuint positionBuffer;
-	glGenBuffers(1, &positionBuffer);
-	glBindBuffer(GL_ARRAY_BUFFER, positionBuffer);
+	// Create a vector populated by text file data that describes the coordinates of the triangles to be drawn
+	std::vector<float> bgPosition = LoadData<float>("./Resources/bgPosition.txt");
 	
-	std::vector<float> bgPosition = LoadVertices("./Resources/bgPosition.txt");
+	// Create a Position Buffer Object and copy the vector data to it
+	GLuint positionBuffer = makeBufferObject(1, GL_ARRAY_BUFFER, GL_STATIC_DRAW, bgPosition);
 	
-	glBufferData(GL_ARRAY_BUFFER, bgPosition.size() * sizeof(float), &bgPosition.at(0), GL_STATIC_DRAW);
+	// Create a vector populated by text file data that has the color of the triangles to be drawn
+	std::vector<float> bgColor = LoadData<float>("./Resources/bgColor.txt");
 	
-	// Create a Color Buffer Object and copy the vertex data to it
-	GLuint colorBuffer;
-	glGenBuffers(1, &colorBuffer);
-	glBindBuffer(GL_ARRAY_BUFFER, colorBuffer);
+	// Create a Color Buffer Object and copy the vector data to it
+	GLuint colorBuffer = makeBufferObject(1, GL_ARRAY_BUFFER, GL_STATIC_DRAW, bgColor);
 	
-	std::vector<float> bgColor = LoadVertices("./Resources/bgColor.txt");
+	// Create a vector populated by text file data that has the location of the texture image
+	std::vector<float> bgTexture = LoadData<float>("./Resources/bgTexture.txt");
 	
-	glBufferData(GL_ARRAY_BUFFER, bgColor.size() * sizeof(float), &bgColor.at(0), GL_STATIC_DRAW);
+	// Create a Texture Buffer Object and copy the vector data to it
+	GLuint textureBuffer = makeBufferObject(1, GL_ARRAY_BUFFER, GL_STATIC_DRAW, bgTexture);
 	
-	// Create a Texture Buffer Object and copy the vertex data to it
-	GLuint textureBuffer;
-	glGenBuffers(1, &textureBuffer);
-	glBindBuffer(GL_ARRAY_BUFFER, textureBuffer);
-
-	std::vector<float> bgTexture = LoadVertices("./Resources/bgTexture.txt");
+	// Create a vector populated by text file data that describes the order that an object is drawn in
+	std::vector<GLuint> drawOrder = LoadData<GLuint>("./Resources/drawOrder.txt");
 	
-	glBufferData(GL_ARRAY_BUFFER, bgTexture.size() * sizeof(float), &bgTexture.at(0), GL_STATIC_DRAW);
-	
-	// Create an element array
-	GLuint ebo;
-	glGenBuffers(1, &ebo);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
-	
-	GLuint elements[] = { // Describes which set of points are drawn each time
-		0, 1, 2,
-		2, 3, 0
-	};
-	
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(elements), elements, GL_STATIC_DRAW);
-	
+	// Create an Element Buffer Object and copy the vector data to it
+	GLuint elementBuffer = makeBufferObject(1, GL_ELEMENT_ARRAY_BUFFER, GL_STATIC_DRAW, drawOrder);
 	
 	GLuint shaderProgram = LoadShaders("./Resources/vertexShader.txt", "./Resources/fragmentShader.txt");
 	glUseProgram(shaderProgram);
 	
 	// Specify the layout of the vertex data
-	GLint posAttrib = glGetAttribLocation(shaderProgram, "position");
-	glEnableVertexAttribArray(posAttrib);
-	glBindBuffer(GL_ARRAY_BUFFER, positionBuffer);
-	glVertexAttribPointer(posAttrib, 2, GL_FLOAT, GL_FALSE, 0, 0);
+	makeAttribute(shaderProgram, "position", GL_ARRAY_BUFFER, positionBuffer, 2, GL_FLOAT, GL_FALSE, 0, 0);
 	
 	// Specify the color attributes
-	GLint colAttrib = glGetAttribLocation(shaderProgram, "color");
-	glEnableVertexAttribArray(colAttrib);
-	glBindBuffer(GL_ARRAY_BUFFER, colorBuffer);
-	glVertexAttribPointer(colAttrib, 3, GL_FLOAT, GL_FALSE, 0, 0);
-
-	// Specifiy the texture usage
-	GLint texAttrib = glGetAttribLocation(shaderProgram, "texcoord");
-	glEnableVertexAttribArray(texAttrib);
-	glBindBuffer(GL_ARRAY_BUFFER, textureBuffer);
-	glVertexAttribPointer(texAttrib, 2, GL_FLOAT, GL_FALSE, 0, 0);
-
-	std::vector<GLuint> textures(1,0);
-	glGenTextures(1, &textures.at(0));
+	makeAttribute(shaderProgram, "color", GL_ARRAY_BUFFER, colorBuffer, 3, GL_FLOAT, GL_FALSE, 0, 0);
 	
-	LoadTextures(textures, "./Resources/Background.png", "backGround", shaderProgram, 0);
+	// Specifiy the texture usage
+	makeAttribute(shaderProgram, "texcoord", GL_ARRAY_BUFFER, textureBuffer, 2, GL_FLOAT, GL_FALSE, 0, 0);
+	
+	std::vector<GLuint> textures(1,0); // Creates vector with one copy of a zero
+	LoadTextures(textures, "./Resources/Background.png", "backGround", shaderProgram, 0); // Binds the background texture to the single number in vector textures
 	
 	SDL_Event windowEvent;
 	while (true) {
@@ -220,16 +217,20 @@ int main() {
 		// Draw a rectangle from the 2 triangles using 6 indices
 		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 		
+		// Update window
 		SDL_GL_SwapWindow(window);
 	}
 	glDeleteTextures(static_cast<GLsizei>(textures.size()), &textures.at(0)); // Casted to remove warning about precision loss (this doesn't matter)
 	
 	glDeleteProgram(shaderProgram);
 	
-	glDeleteBuffers(1, &ebo);
+	// Delete all the buffers!
+	glDeleteBuffers(1, &elementBuffer);
 	glDeleteBuffers(1, &positionBuffer);
+	glDeleteBuffers(1, &colorBuffer);
+	glDeleteBuffers(1, &textureBuffer);
 	
-	glDeleteVertexArrays(1, &vao);
+	glDeleteVertexArrays(1, &vertexArrayObject);
 	
 	SDL_GL_DeleteContext(context);
 	return 0;

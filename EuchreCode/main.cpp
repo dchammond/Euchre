@@ -10,8 +10,6 @@
 #include "GL/glew.h"
 #include <SDL2/SDL.h>
 #include "SOIL.h"
-#define GLM_FORCE_RADIANS
-#include "glm.hpp"
 #include <iostream>
 #include <fstream>
 #include <vector>

@@ -150,14 +150,7 @@ void makeAttribute(GLuint shaderProgram, const char* attrib_name, GLenum target,
 	glVertexAttribPointer(attribute, size, type, normalized, stride, pointer);
 }
 
-int main() {
-	SDL_Window* window = createWindow("Euchre", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 800, 600, SDL_WINDOW_OPENGL);
-	SDL_GLContext context = SDL_GL_CreateContext(window);
-
-	// Initialize GLEW
-	glewExperimental = GL_TRUE;
-	glewInit();
-	
+std::tuple<GLuint, GLuint, GLuint, GLuint, GLuint> makeAllbgBuffers() { // Returns vao, posBuffer, colBuffer, texBuffer, elementBuffer
 	// Create Vertex Array Object
 	GLuint vertexArrayObject = makeVertexArrayObject(1);
 	
@@ -184,6 +177,23 @@ int main() {
 	
 	// Create an Element Buffer Object and copy the vector data to it
 	GLuint elementBuffer = makeBufferObject(1, GL_ELEMENT_ARRAY_BUFFER, GL_STATIC_DRAW, drawOrder);
+	
+	return std::tuple<GLuint, GLuint, GLuint, GLuint, GLuint>(vertexArrayObject, positionBuffer, colorBuffer, textureBuffer, elementBuffer);
+}
+
+int main() {
+	SDL_Window* window = createWindow("Euchre", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 800, 600, SDL_WINDOW_OPENGL);
+	SDL_GLContext context = SDL_GL_CreateContext(window);
+
+	// Initialize GLEW
+	glewExperimental = GL_TRUE;
+	glewInit();
+	
+	GLuint vertexArrayObject = std::get<0>(makeAllbgBuffers());
+	GLuint positionBuffer = std::get<1>(makeAllbgBuffers());
+	GLuint colorBuffer = std::get<2>(makeAllbgBuffers());
+	GLuint textureBuffer = std::get<3>(makeAllbgBuffers());
+	GLuint elementBuffer = std::get<4>(makeAllbgBuffers());
 	
 	GLuint shaderProgram = LoadShaders("./Resources/vertexShader.txt", "./Resources/fragmentShader.txt");
 	glUseProgram(shaderProgram);

@@ -130,7 +130,7 @@ GLuint makeBufferObject(GLsizei numBuffers, GLenum target, GLenum usage, std::ve
 	GLuint buffer;
 	glGenBuffers(numBuffers, &buffer);
 	glBindBuffer(target, buffer);
-	glBufferData(target, data.size() * sizeof(vecTYPE), &data.at(0), usage);
+	glBufferData(target, data.size() * sizeof(vecTYPE), data.data(), usage);
 	
 	return buffer;
 }
@@ -155,25 +155,25 @@ std::tuple<GLuint, GLuint, GLuint, GLuint, GLuint> makeAllbgBuffers() { // Retur
 	GLuint vertexArrayObject = makeVertexArrayObject(1);
 	
 	// Create a vector populated by text file data that describes the coordinates of the triangles to be drawn
-	std::vector<float> bgPosition = LoadData<float>("./Resources/BGattrib/bgPosition.txt");
+	std::vector<float> bgPosition = LoadData<float>("./Resources/BGattribs/bgPosition.txt");
 	
 	// Create a Position Buffer Object and copy the vector data to it
 	GLuint positionBuffer = makeBufferObject(1, GL_ARRAY_BUFFER, GL_STATIC_DRAW, bgPosition);
 	
 	// Create a vector populated by text file data that has the color of the triangles to be drawn
-	std::vector<float> bgColor = LoadData<float>("./Resources/BGattrib/bgColor.txt");
+	std::vector<float> bgColor = LoadData<float>("./Resources/BGattribs/bgColor.txt");
 	
 	// Create a Color Buffer Object and copy the vector data to it
 	GLuint colorBuffer = makeBufferObject(1, GL_ARRAY_BUFFER, GL_STATIC_DRAW, bgColor);
 	
 	// Create a vector populated by text file data that has the location of the texture image
-	std::vector<float> bgTexture = LoadData<float>("./Resources/BGattrib/bgTexture.txt");
+	std::vector<float> bgTexture = LoadData<float>("./Resources/BGattribs/bgTexture.txt");
 	
 	// Create a Texture Buffer Object and copy the vector data to it
 	GLuint textureBuffer = makeBufferObject(1, GL_ARRAY_BUFFER, GL_STATIC_DRAW, bgTexture);
 	
 	// Create a vector populated by text file data that describes the order that an object is drawn in
-	std::vector<GLuint> drawOrder = LoadData<GLuint>("./Resources/BGattrib/drawOrder.txt");
+	std::vector<GLuint> drawOrder = LoadData<GLuint>("./Resources/BGattribs/drawOrder.txt");
 	
 	// Create an Element Buffer Object and copy the vector data to it
 	GLuint elementBuffer = makeBufferObject(1, GL_ELEMENT_ARRAY_BUFFER, GL_STATIC_DRAW, drawOrder);
@@ -189,11 +189,13 @@ int main() {
 	glewExperimental = GL_TRUE;
 	glewInit();
 	
-	GLuint vertexArrayObject = std::get<0>(makeAllbgBuffers());
-	GLuint positionBuffer = std::get<1>(makeAllbgBuffers());
-	GLuint colorBuffer = std::get<2>(makeAllbgBuffers());
-	GLuint textureBuffer = std::get<3>(makeAllbgBuffers());
-	GLuint elementBuffer = std::get<4>(makeAllbgBuffers());
+	std::tuple<GLuint, GLuint, GLuint, GLuint, GLuint> buffers = makeAllbgBuffers();
+	
+	GLuint vertexArrayObject = std::get<0>(buffers);
+	GLuint positionBuffer = std::get<1>(buffers);
+	GLuint colorBuffer = std::get<2>(buffers);
+	GLuint textureBuffer = std::get<3>(buffers);
+	GLuint elementBuffer = std::get<4>(buffers);
 	
 	GLuint shaderProgram = LoadShaders("./Resources/vertexShaders/BGvertexShader.txt", "./Resources/fragmentShaders/BGfragmentShader.txt");
 	glUseProgram(shaderProgram);

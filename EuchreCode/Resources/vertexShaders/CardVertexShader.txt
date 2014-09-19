@@ -1,0 +1,24 @@
+#version 150 core
+
+in vec2 bgposition;
+in vec2 bgcoord;
+in vec3 bgcolor;
+
+//in vec2 cardposition;
+//in vec2 cardcoord;
+//in vec3 cardcolor;
+
+out vec3 BGColor;
+out vec2 BGcoord;
+
+//out vec3 CardColor;
+//out vec2 Cardcoord;
+
+void main()
+{
+	BGcoord = bgcoord;
+	BGColor = bgcolor;
+//	Cardcoord = cardcoord;
+//	CardColor = cardcolor;
+	gl_Position = vec4(bgposition, 0.0, 1.0);
+}

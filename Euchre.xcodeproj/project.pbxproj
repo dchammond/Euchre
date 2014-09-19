@@ -35,6 +35,19 @@
 		514F25C519C38ECB00A6F955 /* SDL2.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SDL2.framework; path = ../../../../Library/Frameworks/SDL2.framework; sourceTree = "<group>"; };
 		514F25C719C38EEA00A6F955 /* libSOIL.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libSOIL.a; path = ../../../../usr/local/lib/libSOIL.a; sourceTree = "<group>"; };
 		514F25C919C38F0D00A6F955 /* libGLEW.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libGLEW.a; path = "../../../../usr/local/include/glew-1.10.0/lib/libGLEW.a"; sourceTree = "<group>"; };
+		5182200F19CCD5E50001AACC /* Background.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Background.png; sourceTree = "<group>"; };
+		5182201119CCD5E50001AACC /* bgColor.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = bgColor.txt; sourceTree = "<group>"; };
+		5182201219CCD5E50001AACC /* bgPosition.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = bgPosition.txt; sourceTree = "<group>"; };
+		5182201319CCD5E50001AACC /* bgTexture.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = bgTexture.txt; sourceTree = "<group>"; };
+		5182201419CCD5E50001AACC /* drawOrder.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = drawOrder.txt; sourceTree = "<group>"; };
+		5182201619CCD5E50001AACC /* cardColor.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = cardColor.txt; sourceTree = "<group>"; };
+		5182201719CCD5E50001AACC /* cardPosition.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = cardPosition.txt; sourceTree = "<group>"; };
+		5182201819CCD5E50001AACC /* cardTexture.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = cardTexture.txt; sourceTree = "<group>"; };
+		5182201A19CCD5E50001AACC /* BGfragmentShader.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = BGfragmentShader.txt; sourceTree = "<group>"; };
+		5182201B19CCD5E50001AACC /* CardFragmentShader.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = CardFragmentShader.txt; sourceTree = "<group>"; };
+		5182201C19CCD5E50001AACC /* king_of_hearts.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = king_of_hearts.png; sourceTree = "<group>"; };
+		5182201E19CCD5E50001AACC /* BGvertexShader.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = BGvertexShader.txt; sourceTree = "<group>"; };
+		5182201F19CCD5E50001AACC /* CardVertexShader.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = CardVertexShader.txt; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -63,6 +76,7 @@
 				514F25C119C38E9A00A6F955 /* OpenGL.framework */,
 				514F25B619C38DCA00A6F955 /* Euchre */,
 				514F25B519C38DCA00A6F955 /* Products */,
+				5182200E19CCD5E50001AACC /* Resources */,
 			);
 			sourceTree = "<group>";
 		};
@@ -80,6 +94,59 @@
 				514F25BE19C38E2C00A6F955 /* main.cpp */,
 			);
 			path = Euchre;
+			sourceTree = "<group>";
+		};
+		5182200E19CCD5E50001AACC /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				5182200F19CCD5E50001AACC /* Background.png */,
+				5182201019CCD5E50001AACC /* BGattribs */,
+				5182201519CCD5E50001AACC /* cardAttribs */,
+				5182201919CCD5E50001AACC /* fragmentShaders */,
+				5182201C19CCD5E50001AACC /* king_of_hearts.png */,
+				5182201D19CCD5E50001AACC /* vertexShaders */,
+			);
+			name = Resources;
+			path = EuchreCode/Resources;
+			sourceTree = "<group>";
+		};
+		5182201019CCD5E50001AACC /* BGattribs */ = {
+			isa = PBXGroup;
+			children = (
+				5182201119CCD5E50001AACC /* bgColor.txt */,
+				5182201219CCD5E50001AACC /* bgPosition.txt */,
+				5182201319CCD5E50001AACC /* bgTexture.txt */,
+				5182201419CCD5E50001AACC /* drawOrder.txt */,
+			);
+			path = BGattribs;
+			sourceTree = "<group>";
+		};
+		5182201519CCD5E50001AACC /* cardAttribs */ = {
+			isa = PBXGroup;
+			children = (
+				5182201619CCD5E50001AACC /* cardColor.txt */,
+				5182201719CCD5E50001AACC /* cardPosition.txt */,
+				5182201819CCD5E50001AACC /* cardTexture.txt */,
+			);
+			path = cardAttribs;
+			sourceTree = "<group>";
+		};
+		5182201919CCD5E50001AACC /* fragmentShaders */ = {
+			isa = PBXGroup;
+			children = (
+				5182201A19CCD5E50001AACC /* BGfragmentShader.txt */,
+				5182201B19CCD5E50001AACC /* CardFragmentShader.txt */,
+			);
+			path = fragmentShaders;
+			sourceTree = "<group>";
+		};
+		5182201D19CCD5E50001AACC /* vertexShaders */ = {
+			isa = PBXGroup;
+			children = (
+				5182201E19CCD5E50001AACC /* BGvertexShader.txt */,
+				5182201F19CCD5E50001AACC /* CardVertexShader.txt */,
+			);
+			path = vertexShaders;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */

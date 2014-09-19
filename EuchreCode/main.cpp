@@ -182,7 +182,7 @@ std::tuple<GLuint, GLuint, GLuint, GLuint, GLuint> makeAllbgBuffers() { // Retur
 }
 
 int main() {
-	SDL_Window* window = createWindow("Euchre", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 800, 600, SDL_WINDOW_OPENGL);
+	SDL_Window* window = createWindow("Euchre", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 800, 800, SDL_WINDOW_OPENGL);
 	SDL_GLContext context = SDL_GL_CreateContext(window);
 
 	// Initialize GLEW

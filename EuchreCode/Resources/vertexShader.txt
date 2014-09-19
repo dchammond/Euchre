@@ -1,15 +1,15 @@
 #version 150 core
 
-in vec2 position;
-in vec2 texcoord;
-in vec3 color;
+in vec2 bgposition;
+in vec2 bgcoord;
+in vec3 bgcolor;
 
-out vec3 Color;
-out vec2 Texcoord;
+out vec3 BGColor;
+out vec2 BGcoord;
 
 void main()
 {
-	Texcoord = texcoord;
-	Color = color;
-	gl_Position = vec4(position, 0.0, 1.0);
+	BGcoord = bgcoord;
+	BGColor = bgcolor;
+	gl_Position = vec4(bgposition, 0.0, 1.0);
 }

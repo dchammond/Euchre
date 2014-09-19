@@ -199,13 +199,13 @@ int main() {
 	glUseProgram(shaderProgram);
 	
 	// Specify the layout of the vertex data
-	makeAttribute(shaderProgram, "position", GL_ARRAY_BUFFER, positionBuffer, 2, GL_FLOAT, GL_FALSE, 0, 0);
+	makeAttribute(shaderProgram, "bgposition", GL_ARRAY_BUFFER, positionBuffer, 2, GL_FLOAT, GL_FALSE, 0, 0);
 	
 	// Specify the color attributes
-	makeAttribute(shaderProgram, "color", GL_ARRAY_BUFFER, colorBuffer, 3, GL_FLOAT, GL_FALSE, 0, 0);
+	makeAttribute(shaderProgram, "bgcolor", GL_ARRAY_BUFFER, colorBuffer, 3, GL_FLOAT, GL_FALSE, 0, 0);
 	
 	// Specifiy the texture usage
-	makeAttribute(shaderProgram, "texcoord", GL_ARRAY_BUFFER, textureBuffer, 2, GL_FLOAT, GL_FALSE, 0, 0);
+	makeAttribute(shaderProgram, "bgcoord", GL_ARRAY_BUFFER, textureBuffer, 2, GL_FLOAT, GL_FALSE, 0, 0);
 	
 	std::vector<GLuint> textures(1,0); // Creates vector with one copy of a zero
 	LoadTextures(textures, "./Resources/Background.png", "backGround", shaderProgram, 0); // Binds the background texture to the single number in vector textures

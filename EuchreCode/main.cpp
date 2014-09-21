@@ -150,7 +150,7 @@ void makeAttribute(GLuint shaderProgram, const char* attrib_name, GLenum target,
 	glVertexAttribPointer(attribute, size, type, normalized, stride, pointer);
 }
 
-std::tuple<GLuint, GLuint, GLuint, GLuint, GLuint> makeAllbgBuffers() { // Returns vao, posBuffer, colBuffer, texBuffer, elementBuffer
+std::tuple<GLuint, GLuint, GLuint, GLuint, GLuint> makeAllbgBuffers() { // Returns vao, BGposBuffer, BGcolBuffer, BGtexBuffer, BGelementBuffer
 	// Create Vertex Array Object
 	GLuint vertexArrayObject = makeVertexArrayObject(1);
 	
@@ -158,27 +158,27 @@ std::tuple<GLuint, GLuint, GLuint, GLuint, GLuint> makeAllbgBuffers() { // Retur
 	std::vector<float> bgPosition = LoadData<float>("./Resources/BGattribs/bgPosition.txt");
 	
 	// Create a Position Buffer Object and copy the vector data to it
-	GLuint positionBuffer = makeBufferObject(1, GL_ARRAY_BUFFER, GL_STATIC_DRAW, bgPosition);
+	GLuint BGpositionBuffer = makeBufferObject(1, GL_ARRAY_BUFFER, GL_STATIC_DRAW, bgPosition);
 	
 	// Create a vector populated by text file data that has the color of the triangles to be drawn
 	std::vector<float> bgColor = LoadData<float>("./Resources/BGattribs/bgColor.txt");
 	
 	// Create a Color Buffer Object and copy the vector data to it
-	GLuint colorBuffer = makeBufferObject(1, GL_ARRAY_BUFFER, GL_STATIC_DRAW, bgColor);
+	GLuint BGcolorBuffer = makeBufferObject(1, GL_ARRAY_BUFFER, GL_STATIC_DRAW, bgColor);
 	
 	// Create a vector populated by text file data that has the location of the texture image
 	std::vector<float> bgTexture = LoadData<float>("./Resources/BGattribs/bgTexture.txt");
 	
 	// Create a Texture Buffer Object and copy the vector data to it
-	GLuint textureBuffer = makeBufferObject(1, GL_ARRAY_BUFFER, GL_STATIC_DRAW, bgTexture);
+	GLuint BGtextureBuffer = makeBufferObject(1, GL_ARRAY_BUFFER, GL_STATIC_DRAW, bgTexture);
 	
 	// Create a vector populated by text file data that describes the order that an object is drawn in
 	std::vector<GLuint> drawOrder = LoadData<GLuint>("./Resources/BGattribs/drawOrder.txt");
 	
 	// Create an Element Buffer Object and copy the vector data to it
-	GLuint elementBuffer = makeBufferObject(1, GL_ELEMENT_ARRAY_BUFFER, GL_STATIC_DRAW, drawOrder);
+	GLuint BGelementBuffer = makeBufferObject(1, GL_ELEMENT_ARRAY_BUFFER, GL_STATIC_DRAW, drawOrder);
 	
-	return std::tuple<GLuint, GLuint, GLuint, GLuint, GLuint>(vertexArrayObject, positionBuffer, colorBuffer, textureBuffer, elementBuffer);
+	return std::tuple<GLuint, GLuint, GLuint, GLuint, GLuint>(vertexArrayObject, BGpositionBuffer, BGcolorBuffer, BGtextureBuffer, BGelementBuffer);
 }
 
 int main() {
@@ -192,22 +192,22 @@ int main() {
 	auto buffers = makeAllbgBuffers();
 	
 	GLuint vertexArrayObject = std::get<0>(buffers);
-	GLuint positionBuffer = std::get<1>(buffers);
-	GLuint colorBuffer = std::get<2>(buffers);
-	GLuint textureBuffer = std::get<3>(buffers);
-	GLuint elementBuffer = std::get<4>(buffers);
+	GLuint BGpositionBuffer = std::get<1>(buffers);
+	GLuint BGcolorBuffer = std::get<2>(buffers);
+	GLuint BGtextureBuffer = std::get<3>(buffers);
+	GLuint BGelementBuffer = std::get<4>(buffers);
 	
 	GLuint shaderProgram = LoadShaders("./Resources/vertexShaders/BGvertexShader.txt", "./Resources/fragmentShaders/BGfragmentShader.txt");
 	glUseProgram(shaderProgram);
 	
 	// Specify the layout of the vertex data
-	makeAttribute(shaderProgram, "bgposition", GL_ARRAY_BUFFER, positionBuffer, 2, GL_FLOAT, GL_FALSE, 0, 0);
+	makeAttribute(shaderProgram, "bgposition", GL_ARRAY_BUFFER, BGpositionBuffer, 2, GL_FLOAT, GL_FALSE, 0, 0);
 	
 	// Specify the color attributes
-	makeAttribute(shaderProgram, "bgcolor", GL_ARRAY_BUFFER, colorBuffer, 3, GL_FLOAT, GL_FALSE, 0, 0);
+	makeAttribute(shaderProgram, "bgcolor", GL_ARRAY_BUFFER, BGcolorBuffer, 3, GL_FLOAT, GL_FALSE, 0, 0);
 	
 	// Specifiy the texture usage
-	makeAttribute(shaderProgram, "bgcoord", GL_ARRAY_BUFFER, textureBuffer, 2, GL_FLOAT, GL_FALSE, 0, 0);
+	makeAttribute(shaderProgram, "bgcoord", GL_ARRAY_BUFFER, BGtextureBuffer, 2, GL_FLOAT, GL_FALSE, 0, 0);
 	
 	std::vector<GLuint> textures(1,0); // Creates vector with one copy of a zero
 	LoadTextures(textures, "./Resources/Background.png", "backGround", shaderProgram, 0); // Binds the background texture to the single number in vector textures
@@ -235,10 +235,10 @@ int main() {
 	glDeleteProgram(shaderProgram);
 	
 	// Delete all the buffers!
-	glDeleteBuffers(1, &elementBuffer);
-	glDeleteBuffers(1, &positionBuffer);
-	glDeleteBuffers(1, &colorBuffer);
-	glDeleteBuffers(1, &textureBuffer);
+	glDeleteBuffers(1, &BGelementBuffer);
+	glDeleteBuffers(1, &BGpositionBuffer);
+	glDeleteBuffers(1, &BGcolorBuffer);
+	glDeleteBuffers(1, &BGtextureBuffer);
 	
 	glDeleteVertexArrays(1, &vertexArrayObject);
 	

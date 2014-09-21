@@ -230,7 +230,7 @@ int main() {
 		// Update window
 		SDL_GL_SwapWindow(window);
 	}
-	glDeleteTextures(static_cast<GLsizei>(textures.size()), &textures.at(0)); // Casted to remove warning about precision loss (this doesn't matter)
+	glDeleteTextures(static_cast<GLsizei>(textures.size()), &textures.front()); // Casted to remove warning about precision loss (this doesn't matter)
 	
 	glDeleteProgram(shaderProgram);
 	

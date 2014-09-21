@@ -189,7 +189,7 @@ int main() {
 	glewExperimental = GL_TRUE;
 	glewInit();
 	
-	std::tuple<GLuint, GLuint, GLuint, GLuint, GLuint> buffers = makeAllbgBuffers();
+	auto buffers = makeAllbgBuffers();
 	
 	GLuint vertexArrayObject = std::get<0>(buffers);
 	GLuint positionBuffer = std::get<1>(buffers);

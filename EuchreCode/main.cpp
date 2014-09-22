@@ -17,6 +17,7 @@ int main() {
 	glewExperimental = GL_TRUE;
 	glewInit();
 	
+	// BEGIN sets up the background
 	auto buffers = program.makeAllbgBuffers();
 	
 	GLuint vertexArrayObject = std::get<0>(buffers);
@@ -39,6 +40,7 @@ int main() {
 	
 	std::vector<GLuint> textures(1,0); // Creates vector with one copy of a zero
 	program.LoadTextures(textures, "./Resources/Background.png", "backGround", shaderProgram, 0); // Binds the background texture to the single number in vector textures
+	// END set up background
 	
 	SDL_Event windowEvent;
 	while (true) {

@@ -1,13 +1,12 @@
 #version 150 core
 
-in vec3 BGColor;
-in vec2 BGcoord;
+in vec3 CardColor;
 
-out vec4 BGoutColor;
+out vec4 CardoutColor;
 
-uniform sampler2D BG;
+uniform sampler2D CARD;
 
 void main()
 {
-    BGoutColor = texture(BG, BGcoord) * vec4(BGColor, 1.0);
+    CardoutColor = texture(CARD, CardCoord) * vec4(CardColor, 1.0);
 }

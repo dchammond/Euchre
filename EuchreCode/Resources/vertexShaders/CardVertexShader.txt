@@ -1,7 +1,7 @@
 #version 150 core
 
-in vec2 bgposition;
-in vec2 bgcoord;
+in vec2 cardposition;
+in vec2 cardcoord;
 in vec3 bgcolor;
 
 //in vec2 cardposition;

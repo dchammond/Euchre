@@ -9,15 +9,15 @@
 #include "Euchre.h"
 
 int main() {
-	Euchre::MakeObject bg;
-	SDL_Window* window = bg.createWindow("Euchre", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 800, 800, SDL_WINDOW_OPENGL);
+	Euchre::MakeObject program;
+	SDL_Window* window = program.createWindow("Euchre", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 800, 800, SDL_WINDOW_OPENGL);
 	SDL_GLContext context = SDL_GL_CreateContext(window);
 
 	// Initialize GLEW
 	glewExperimental = GL_TRUE;
 	glewInit();
 	
-	auto buffers = bg.makeAllbgBuffers();
+	auto buffers = program.makeAllbgBuffers();
 	
 	GLuint vertexArrayObject = std::get<0>(buffers);
 	GLuint BGpositionBuffer = std::get<1>(buffers);
@@ -25,20 +25,20 @@ int main() {
 	GLuint BGtextureBuffer = std::get<3>(buffers);
 	GLuint BGelementBuffer = std::get<4>(buffers);
 	
-	GLuint shaderProgram = bg.LoadShaders("./Resources/vertexShaders/BGvertexShader.txt", "./Resources/fragmentShaders/BGfragmentShader.txt");
+	GLuint shaderProgram = program.LoadShaders("./Resources/vertexShaders/BGvertexShader.txt", "./Resources/fragmentShaders/BGfragmentShader.txt");
 	glUseProgram(shaderProgram);
 	
 	// Specify the layout of the vertex data
-	bg.makeAttribute(shaderProgram, "bgposition", GL_ARRAY_BUFFER, BGpositionBuffer, 2, GL_FLOAT, GL_FALSE, 0, 0);
+	program.makeAttribute(shaderProgram, "bgposition", GL_ARRAY_BUFFER, BGpositionBuffer, 2, GL_FLOAT, GL_FALSE, 0, 0);
 	
 	// Specify the color attributes
-	bg.makeAttribute(shaderProgram, "bgcolor", GL_ARRAY_BUFFER, BGcolorBuffer, 3, GL_FLOAT, GL_FALSE, 0, 0);
+	program.makeAttribute(shaderProgram, "bgcolor", GL_ARRAY_BUFFER, BGcolorBuffer, 3, GL_FLOAT, GL_FALSE, 0, 0);
 	
 	// Specifiy the texture usage
-	bg.makeAttribute(shaderProgram, "bgcoord", GL_ARRAY_BUFFER, BGtextureBuffer, 2, GL_FLOAT, GL_FALSE, 0, 0);
+	program.makeAttribute(shaderProgram, "bgcoord", GL_ARRAY_BUFFER, BGtextureBuffer, 2, GL_FLOAT, GL_FALSE, 0, 0);
 	
 	std::vector<GLuint> textures(1,0); // Creates vector with one copy of a zero
-	bg.LoadTextures(textures, "./Resources/Background.png", "backGround", shaderProgram, 0); // Binds the background texture to the single number in vector textures
+	program.LoadTextures(textures, "./Resources/Background.png", "backGround", shaderProgram, 0); // Binds the background texture to the single number in vector textures
 	
 	SDL_Event windowEvent;
 	while (true) {

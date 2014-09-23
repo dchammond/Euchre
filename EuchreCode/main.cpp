@@ -18,7 +18,8 @@ int main() {
 	glewInit();
 	
 	// Create the vao
-	GLuint vertexArrayObject = program.makeVertexArrayObject(1);
+	GLsizei numOfVAO = 2;
+	std::vector<GLuint> vertexArrayObject = program.makeVertexArrayObject(numOfVAO);
 	
 	// BEGIN set up the background
 	bool bg = true;
@@ -81,7 +82,7 @@ int main() {
 	glDeleteBuffers(1, &BGcolorBuffer);
 	glDeleteBuffers(1, &BGtextureBuffer);
 	
-	glDeleteVertexArrays(1, &vertexArrayObject);
+	glDeleteVertexArrays(numOfVAO, &vertexArrayObject.front());
 	
 	SDL_GL_DeleteContext(context);
 	return 0;

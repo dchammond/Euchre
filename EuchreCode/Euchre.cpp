@@ -130,11 +130,10 @@ GLuint MakeObject::makeBufferObject(GLsizei numBuffers, GLenum target, GLenum us
 	return buffer;
 }
 
-GLuint MakeObject::makeVertexArrayObject(GLsizei numBuffers) { // Creates a vertex array object, returns that vao
-	GLuint vao;
-	glGenVertexArrays(numBuffers, &vao);
-	glBindVertexArray(vao);
-	
+std::vector<GLuint> MakeObject::makeVertexArrayObject(GLsizei numBuffers) { // Creates a vertex array object, returns that vao
+	std::vector<GLuint> vao(numBuffers,0);
+	glGenVertexArrays(numBuffers, &vao.front());
+	glBindVertexArray(vao.front());
 	return vao;
 }
 

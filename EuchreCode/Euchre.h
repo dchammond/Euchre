@@ -34,7 +34,7 @@ namespace Euchre {
 		template<class vecTYPE> // Redefine new vecTYPE
 		GLuint makeBufferObject(GLsizei numBuffers, GLenum target, GLenum usage, std::vector<vecTYPE> data);
 
-		GLuint makeVertexArrayObject(GLsizei numBuffers);
+		std::vector<GLuint> makeVertexArrayObject(GLsizei numBuffers);
 
 		void makeAttribute(GLuint shaderProgram, const char* attrib_name, GLenum target, GLuint targetBuffer, GLint size, GLenum type, GLboolean normalized, GLsizei stride, const GLvoid* pointer);
 

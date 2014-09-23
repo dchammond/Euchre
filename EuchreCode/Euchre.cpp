@@ -102,7 +102,7 @@ void MakeObject::LoadTextures(std::vector<GLuint> textures, const char* filename
 }
 
 template<class vecTYPE> // Allows for a vector of any type to be made and returned!
-std::vector<vecTYPE>MakeObject::LoadData(std::string file_path) { // Loads a txt file of numbers (comma delimited) and turns them into the requested type and puts them into a vector, returns that vector
+std::vector<vecTYPE> MakeObject::LoadData(std::string file_path) { // Loads a txt file of numbers (comma delimited) and turns them into the requested type and puts them into a vector, returns that vector
 	// Read Vertices in from a file
 	std::vector<vecTYPE> vertices;
 	std::string fileCode;
@@ -133,7 +133,7 @@ GLuint MakeObject::makeBufferObject(GLsizei numBuffers, GLenum target, GLenum us
 std::vector<GLuint> MakeObject::makeVertexArrayObject(GLsizei numBuffers) { // Creates a vertex array object, returns that vao
 	std::vector<GLuint> vao(numBuffers,0);
 	glGenVertexArrays(numBuffers, &vao.front());
-	glBindVertexArray(vao.front());
+//	glBindVertexArray(vao.front());
 	return vao;
 }
 

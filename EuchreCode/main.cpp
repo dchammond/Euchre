@@ -20,6 +20,7 @@ int main() {
 	// Create the vao
 	GLsizei numOfVAO = 2;
 	std::vector<GLuint> vertexArrayObject = program.makeVertexArrayObject(numOfVAO);
+	glBindVertexArray(vertexArrayObject.at(0));
 	
 	// BEGIN set up the background
 	bool bg = true;
@@ -46,6 +47,7 @@ int main() {
 	program.LoadTextures(textures, "./Resources/Background.png", "backGround", shaderProgram, 0); // Binds the background texture to the single number in vector textures
 	// END set up background
 	// BEGIN set up card
+	glBindVertexArray(vertexArrayObject.at(0));
 	bg = false;
 	
 	auto CARDbuffers = program.makeAllBuffers(bg);

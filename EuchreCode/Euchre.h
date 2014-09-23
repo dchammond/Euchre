@@ -17,6 +17,7 @@
 #include <iostream>
 #include <fstream>
 #include <vector>
+#include <string>
 
 namespace Euchre {
 	class MakeObject {
@@ -28,7 +29,7 @@ namespace Euchre {
 		void LoadTextures(std::vector<GLuint> textures, const char* filename, const char* texName, GLuint shaderProgram, int texNum);
 
 		template<class vecTYPE> // Allows for a vector of any type to be made and returned!
-		std::vector<vecTYPE> LoadData(const char* file_path);
+		std::vector<vecTYPE> LoadData(std::string file_path);
 
 		template<class vecTYPE> // Redefine new vecTYPE
 		GLuint makeBufferObject(GLsizei numBuffers, GLenum target, GLenum usage, std::vector<vecTYPE> data);
@@ -37,7 +38,7 @@ namespace Euchre {
 
 		void makeAttribute(GLuint shaderProgram, const char* attrib_name, GLenum target, GLuint targetBuffer, GLint size, GLenum type, GLboolean normalized, GLsizei stride, const GLvoid* pointer);
 
-		std::tuple<GLuint, GLuint, GLuint, GLuint, GLuint> makeAllbgBuffers();
+		std::tuple<GLuint, GLuint, GLuint, GLuint> makeAllBuffers(bool BG);
 	
 	};
 }

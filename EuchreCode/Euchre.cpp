@@ -102,7 +102,7 @@ void MakeObject::LoadTextures(std::vector<GLuint> textures, const char* filename
 }
 
 template<class vecTYPE> // Allows for a vector of any type to be made and returned!
-std::vector<vecTYPE>MakeObject::LoadData(const char* file_path) { // Loads a txt file of numbers (comma delimited) and turns them into the requested type and puts them into a vector, returns that vector
+std::vector<vecTYPE>MakeObject::LoadData(std::string file_path) { // Loads a txt file of numbers (comma delimited) and turns them into the requested type and puts them into a vector, returns that vector
 	// Read Vertices in from a file
 	std::vector<vecTYPE> vertices;
 	std::string fileCode;
@@ -145,33 +145,43 @@ void MakeObject::makeAttribute(GLuint shaderProgram, const char* attrib_name, GL
 	glVertexAttribPointer(attribute, size, type, normalized, stride, pointer);
 }
 
-std::tuple<GLuint, GLuint, GLuint, GLuint, GLuint> Euchre::MakeObject::makeAllbgBuffers() { // Returns vao, BGposBuffer, BGcolBuffer, BGtexBuffer, BGelementBuffer
-	// Create Vertex Array Object
-	GLuint vertexArrayObject = MakeObject::makeVertexArrayObject(1);
+std::tuple<GLuint, GLuint, GLuint, GLuint> Euchre::MakeObject::makeAllBuffers(bool BG) { // Returns vao, posBuffer, colBuffer, texBuffer, elementBuffer
+	std::string files[4];
+	if (BG) {
+		files[0] = "./Resources/BGattribs/bgPosition.txt";
+		files[1] = "./Resources/BGattribs/bgColor.txt";
+		files[2] = "./Resources/BGattribs/bgTexture.txt";
+		files[3] = "./Resources/BGattribs/bgdrawOrder.txt";
+	} else if (!BG) {
+		files[0] = "./Resources/cardAttribs/cardPosition.txt";
+		files[1] = "./Resources/cardAttribs/cardColor.txt";
+		files[2] = "./Resources/cardAttribs/cardTexture.txt";
+		files[3] = "./Resources/cardAttribs/carddrawOrder.txt";
+	}
 	
 	// Create a vector populated by text file data that describes the coordinates of the triangles to be drawn
-	std::vector<float> bgPosition = MakeObject::LoadData<float>("./Resources/BGattribs/bgPosition.txt");
+	std::vector<float> position = MakeObject::LoadData<float>(files[0]);
 	
 	// Create a Position Buffer Object and copy the vector data to it
-	GLuint BGpositionBuffer = MakeObject::makeBufferObject(1, GL_ARRAY_BUFFER, GL_STATIC_DRAW, bgPosition);
+	GLuint positionBuffer = MakeObject::makeBufferObject(1, GL_ARRAY_BUFFER, GL_STATIC_DRAW, position);
 	
 	// Create a vector populated by text file data that has the color of the triangles to be drawn
-	std::vector<float> bgColor = MakeObject::LoadData<float>("./Resources/BGattribs/bgColor.txt");
+	std::vector<float> color = MakeObject::LoadData<float>(files[1]);
 	
 	// Create a Color Buffer Object and copy the vector data to it
-	GLuint BGcolorBuffer = MakeObject::makeBufferObject(1, GL_ARRAY_BUFFER, GL_STATIC_DRAW, bgColor);
+	GLuint colorBuffer = MakeObject::makeBufferObject(1, GL_ARRAY_BUFFER, GL_STATIC_DRAW, color);
 	
 	// Create a vector populated by text file data that has the location of the texture image
-	std::vector<float> bgTexture = MakeObject::LoadData<float>("./Resources/BGattribs/bgTexture.txt");
+	std::vector<float> texture = MakeObject::LoadData<float>(files[2]);
 	
 	// Create a Texture Buffer Object and copy the vector data to it
-	GLuint BGtextureBuffer = MakeObject::makeBufferObject(1, GL_ARRAY_BUFFER, GL_STATIC_DRAW, bgTexture);
+	GLuint textureBuffer = MakeObject::makeBufferObject(1, GL_ARRAY_BUFFER, GL_STATIC_DRAW, texture);
 	
 	// Create a vector populated by text file data that describes the order that an object is drawn in
-	std::vector<GLuint> drawOrder = MakeObject::LoadData<GLuint>("./Resources/BGattribs/drawOrder.txt");
+	std::vector<GLuint> drawOrder = MakeObject::LoadData<GLuint>(files[3]);
 	
 	// Create an Element Buffer Object and copy the vector data to it
-	GLuint BGelementBuffer = MakeObject::makeBufferObject(1, GL_ELEMENT_ARRAY_BUFFER, GL_STATIC_DRAW, drawOrder);
+	GLuint elementBuffer = MakeObject::makeBufferObject(1, GL_ELEMENT_ARRAY_BUFFER, GL_STATIC_DRAW, drawOrder);
 	
-	return std::tuple<GLuint, GLuint, GLuint, GLuint, GLuint>(vertexArrayObject, BGpositionBuffer, BGcolorBuffer, BGtextureBuffer, BGelementBuffer);
+	return std::tuple<GLuint, GLuint, GLuint, GLuint>(positionBuffer, colorBuffer, textureBuffer, elementBuffer);
 }

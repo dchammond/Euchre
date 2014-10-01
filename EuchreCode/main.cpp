@@ -82,14 +82,16 @@ int main() {
 		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT);
 		
-//		glBindVertexArray(vertexArrayObject.at(0));
+		// Draw background
+		glBindVertexArray(vertexArrayObject.at(0));
 		
 		// Draw a rectangle from the 2 triangles using 6 indices
 		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 		
-//		glBindVertexArray(vertexArrayObject.at(1));
+		// Draw card
+		glBindVertexArray(vertexArrayObject.at(1));
 		
-//		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 		
 		// Update window
 		SDL_GL_SwapWindow(window);

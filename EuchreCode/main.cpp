@@ -34,7 +34,6 @@ int main() {
 	GLuint BGelementBuffer = std::get<3>(BGbuffers);
 	
 	GLuint shaderProgram = program.LoadShaders(ProgramID, "./Resources/vertexShaders/BGvertexShader.txt", "./Resources/fragmentShaders/BGfragmentShader.txt");
-	glUseProgram(shaderProgram);
 	
 	// Specify the layout of the vertex data
 	program.makeAttribute(shaderProgram, "bgposition", GL_ARRAY_BUFFER, BGpositionBuffer, 2, GL_FLOAT, GL_FALSE, 0, 0);
@@ -49,7 +48,7 @@ int main() {
 	program.LoadTextures(textures, "./Resources/Background.png", "backGround", shaderProgram, 0); // Binds the background texture to the single number in vector textures
 	// END set up background
 	// BEGIN set up card
-/*	glBindVertexArray(vertexArrayObject.at(0));
+	glBindVertexArray(vertexArrayObject.at(1));
 	bg = false;
 	
 	auto CARDbuffers = program.makeAllBuffers(bg);
@@ -57,7 +56,18 @@ int main() {
 	GLuint CARDcolorBuffer = std::get<1>(CARDbuffers);
 	GLuint CARDtextureBuffer = std::get<2>(CARDbuffers);
 	GLuint CARDelementBuffer = std::get<3>(CARDbuffers);
-	*/
+
+	shaderProgram += program.LoadShaders(ProgramID, "./Resources/vertexShaders/CARDVertexShader.txt", "./Resources/fragmentShaders/CARDFragmentShader");
+	
+	program.makeAttribute(shaderProgram, "cardposition", GL_ARRAY_BUFFER, CARDpositionBuffers, 2, GL_FLOAT, GL_FALSE, 0, 0);
+	
+	program.makeAttribute(shaderProgram, "cardcolor", GL_ARRAY_BUFFER, CARDcolorBuffer, 3, GL_FLOAT, GL_FALSE, 0, 0);
+	
+	program.makeAttribute(shaderProgram, "cardcoord", GL_ARRAY_BUFFER, CARDtextureBuffer, 2, GL_FLOAT, GL_FALSE, 0, 0);
+	
+	std::vector<GLuint> tex(1,0);
+	program.LoadTextures(tex, "./Resources/king_of_hearts.png", "card", shaderProgram, 0);
+	
 	SDL_Event windowEvent;
 	while (true) {
 		if (SDL_PollEvent(&windowEvent)) {
@@ -66,15 +76,25 @@ int main() {
 			}
 		}
 		
+		glUseProgram(shaderProgram);
+		
 		// Clear the screen to black
 		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT);
 		
+		glBindVertexArray(vertexArrayObject.at(0));
+		
 		// Draw a rectangle from the 2 triangles using 6 indices
+		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+		
+		glBindVertexArray(vertexArrayObject.at(1));
+		
 		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 		
 		// Update window
 		SDL_GL_SwapWindow(window);
+		
+		glUseProgram(0);
 	}
 	glDeleteTextures(static_cast<GLsizei>(textures.size()), &textures.front()); // Casted to remove warning about precision loss (this doesn't matter)
 	

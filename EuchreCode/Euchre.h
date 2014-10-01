@@ -22,7 +22,7 @@
 namespace Euchre {
 	class MakeObject {
 	public:
-		GLuint LoadShaders(const char* vertex_file_path, const char* fragment_file_path);
+		GLuint LoadShaders(GLuint ProgramID, const char* vertex_file_path, const char* fragment_file_path);
 
 		SDL_Window* createWindow(const char* title, int x, int y, int w, int h, Uint32 flags);
 

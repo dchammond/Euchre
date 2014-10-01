@@ -9,7 +9,7 @@
 #include "Euchre.h"
 using namespace Euchre;
 
-GLuint MakeObject::LoadShaders(const char* vertex_file_path, const char* fragment_file_path) { // Loads a vertex and fragment shader, returns a Shader Program called ProgramID
+GLuint MakeObject::LoadShaders(GLuint ProgramID, const char* vertex_file_path, const char* fragment_file_path) { // Loads a vertex and fragment shader, returns a Shader Program called ProgramID
  
 	// Create the shaders
 	GLuint VertexShaderID = glCreateShader(GL_VERTEX_SHADER);
@@ -62,7 +62,6 @@ GLuint MakeObject::LoadShaders(const char* vertex_file_path, const char* fragmen
 	
  
 	// Link the program
-	GLuint ProgramID = glCreateProgram();
 	glAttachShader(ProgramID, VertexShaderID);
 	glAttachShader(ProgramID, FragmentShaderID);
 	glLinkProgram(ProgramID);

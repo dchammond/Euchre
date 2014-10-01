@@ -17,6 +17,8 @@ int main() {
 	glewExperimental = GL_TRUE;
 	glewInit();
 	
+	GLuint ProgramID = glCreateProgram();
+	
 	// Create the vao
 	GLsizei numOfVAO = 2;
 	std::vector<GLuint> vertexArrayObject = program.makeVertexArrayObject(numOfVAO);
@@ -31,7 +33,7 @@ int main() {
 	GLuint BGtextureBuffer = std::get<2>(BGbuffers);
 	GLuint BGelementBuffer = std::get<3>(BGbuffers);
 	
-	GLuint shaderProgram = program.LoadShaders("./Resources/vertexShaders/BGvertexShader.txt", "./Resources/fragmentShaders/BGfragmentShader.txt");
+	GLuint shaderProgram = program.LoadShaders(ProgramID, "./Resources/vertexShaders/BGvertexShader.txt", "./Resources/fragmentShaders/BGfragmentShader.txt");
 	glUseProgram(shaderProgram);
 	
 	// Specify the layout of the vertex data
@@ -47,7 +49,7 @@ int main() {
 	program.LoadTextures(textures, "./Resources/Background.png", "backGround", shaderProgram, 0); // Binds the background texture to the single number in vector textures
 	// END set up background
 	// BEGIN set up card
-	glBindVertexArray(vertexArrayObject.at(0));
+/*	glBindVertexArray(vertexArrayObject.at(0));
 	bg = false;
 	
 	auto CARDbuffers = program.makeAllBuffers(bg);
@@ -55,7 +57,7 @@ int main() {
 	GLuint CARDcolorBuffer = std::get<1>(CARDbuffers);
 	GLuint CARDtextureBuffer = std::get<2>(CARDbuffers);
 	GLuint CARDelementBuffer = std::get<3>(CARDbuffers);
-	
+	*/
 	SDL_Event windowEvent;
 	while (true) {
 		if (SDL_PollEvent(&windowEvent)) {

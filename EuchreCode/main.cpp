@@ -17,7 +17,7 @@ int main() {
 	glewExperimental = GL_TRUE;
 	glewInit();
 	
-	GLuint ProgramID = glCreateProgram();
+	GLuint shaderProgram = glCreateProgram();
 	
 	// Create the vao
 	GLsizei numOfVAO = 2;
@@ -33,7 +33,7 @@ int main() {
 	GLuint BGtextureBuffer = std::get<2>(BGbuffers);
 	GLuint BGelementBuffer = std::get<3>(BGbuffers);
 	
-	GLuint shaderProgram = program.LoadShaders(ProgramID, "./Resources/vertexShaders/BGvertexShader.txt", "./Resources/fragmentShaders/BGfragmentShader.txt");
+	program.LoadShaders(shaderProgram, "./Resources/vertexShaders/BGvertexShader.txt", "./Resources/fragmentShaders/BGfragmentShader.txt");
 	
 	// Specify the layout of the vertex data
 	program.makeAttribute(shaderProgram, "bgposition", GL_ARRAY_BUFFER, BGpositionBuffer, 2, GL_FLOAT, GL_FALSE, 0, 0);
@@ -48,7 +48,7 @@ int main() {
 	program.LoadTextures(textures, "./Resources/Background.png", "backGround", shaderProgram, 0); // Binds the background texture to the single number in vector textures
 	// END set up background
 	// BEGIN set up card
-	glBindVertexArray(vertexArrayObject.at(1));
+/*	glBindVertexArray(vertexArrayObject.at(1));
 	bg = false;
 	
 	auto CARDbuffers = program.makeAllBuffers(bg);
@@ -57,7 +57,7 @@ int main() {
 	GLuint CARDtextureBuffer = std::get<2>(CARDbuffers);
 	GLuint CARDelementBuffer = std::get<3>(CARDbuffers);
 
-	shaderProgram += program.LoadShaders(ProgramID, "./Resources/vertexShaders/CARDVertexShader.txt", "./Resources/fragmentShaders/CARDFragmentShader");
+	program.LoadShaders(shaderProgram, "./Resources/vertexShaders/CardVertexShader.txt", "./Resources/fragmentShaders/CardFragmentShader.txt");
 	
 	program.makeAttribute(shaderProgram, "cardposition", GL_ARRAY_BUFFER, CARDpositionBuffers, 2, GL_FLOAT, GL_FALSE, 0, 0);
 	
@@ -67,7 +67,7 @@ int main() {
 	
 	std::vector<GLuint> tex(1,0);
 	program.LoadTextures(tex, "./Resources/king_of_hearts.png", "card", shaderProgram, 0);
-	
+	*/
 	SDL_Event windowEvent;
 	while (true) {
 		if (SDL_PollEvent(&windowEvent)) {
@@ -96,7 +96,7 @@ int main() {
 		
 		glUseProgram(0);
 	}
-	glDeleteTextures(static_cast<GLsizei>(textures.size()), &textures.front()); // Casted to remove warning about precision loss (this doesn't matter)
+/*	glDeleteTextures(static_cast<GLsizei>(textures.size()), &textures.front()); // Casted to remove warning about precision loss (this doesn't matter)
 	
 	glDeleteProgram(shaderProgram);
 	
@@ -105,7 +105,7 @@ int main() {
 	glDeleteBuffers(1, &BGpositionBuffer);
 	glDeleteBuffers(1, &BGcolorBuffer);
 	glDeleteBuffers(1, &BGtextureBuffer);
-	
+*/
 	glDeleteVertexArrays(numOfVAO, &vertexArrayObject.front());
 	
 	SDL_GL_DeleteContext(context);

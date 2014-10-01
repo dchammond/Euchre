@@ -52,14 +52,14 @@ int main() {
 	bg = false;
 	
 	auto CARDbuffers = program.makeAllBuffers(bg);
-	GLuint CARDpositionBuffers = std::get<0>(CARDbuffers);
+	GLuint CARDpositionBuffer = std::get<0>(CARDbuffers);
 	GLuint CARDcolorBuffer = std::get<1>(CARDbuffers);
 	GLuint CARDtextureBuffer = std::get<2>(CARDbuffers);
 	GLuint CARDelementBuffer = std::get<3>(CARDbuffers);
 
 	program.LoadShaders(shaderProgram, "./Resources/vertexShaders/CardVertexShader.txt", "./Resources/fragmentShaders/CardFragmentShader.txt");
 	
-	program.makeAttribute(shaderProgram, "cardposition", GL_ARRAY_BUFFER, CARDpositionBuffers, 2, GL_FLOAT, GL_FALSE, 0, 0);
+	program.makeAttribute(shaderProgram, "cardposition", GL_ARRAY_BUFFER, CARDpositionBuffer, 2, GL_FLOAT, GL_FALSE, 0, 0);
 	
 	program.makeAttribute(shaderProgram, "cardcolor", GL_ARRAY_BUFFER, CARDcolorBuffer, 3, GL_FLOAT, GL_FALSE, 0, 0);
 	
@@ -67,7 +67,7 @@ int main() {
 	
 	std::vector<GLuint> tex(1,0);
 	program.LoadTextures(tex, "./Resources/king_of_hearts.png", "card", shaderProgram, 0);
-	*/
+*/
 	SDL_Event windowEvent;
 	while (true) {
 		if (SDL_PollEvent(&windowEvent)) {
@@ -82,29 +82,40 @@ int main() {
 		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT);
 		
-		glBindVertexArray(vertexArrayObject.at(0));
+//		glBindVertexArray(vertexArrayObject.at(0));
 		
 		// Draw a rectangle from the 2 triangles using 6 indices
 		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 		
-		glBindVertexArray(vertexArrayObject.at(1));
+//		glBindVertexArray(vertexArrayObject.at(1));
 		
-		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+//		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 		
 		// Update window
 		SDL_GL_SwapWindow(window);
 		
 		glUseProgram(0);
 	}
-/*	glDeleteTextures(static_cast<GLsizei>(textures.size()), &textures.front()); // Casted to remove warning about precision loss (this doesn't matter)
+	glDeleteTextures(static_cast<GLsizei>(textures.size()), &textures.front()); // Casted to remove warning about precision loss (this doesn't matter)
 	
 	glDeleteProgram(shaderProgram);
-	
+/*
 	// Delete all the buffers!
 	glDeleteBuffers(1, &BGelementBuffer);
 	glDeleteBuffers(1, &BGpositionBuffer);
 	glDeleteBuffers(1, &BGcolorBuffer);
 	glDeleteBuffers(1, &BGtextureBuffer);
+
+	glDeleteTextures(static_cast<GLsizei>(textures.size()), &textures.front()); // Casted to remove warning about precision loss (this doesn't matter)
+	 
+	glDeleteProgram(shaderProgram);
+	 
+	// Delete all the buffers!
+	glDeleteBuffers(1, &CARDelementBuffer);
+	glDeleteBuffers(1, &CARDpositionBuffer);
+	glDeleteBuffers(1, &CARDcolorBuffer);
+	glDeleteBuffers(1, &CARDtextureBuffer);
+
 */
 	glDeleteVertexArrays(numOfVAO, &vertexArrayObject.front());
 	

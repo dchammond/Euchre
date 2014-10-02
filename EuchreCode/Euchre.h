@@ -20,8 +20,6 @@
 #include <string>
 #include <tuple>
 
-// Why are these in a class if there's no state?
-// I think these would be better as free functions (not even static functions).
 namespace Euchre {
 	class MakeObject {
 	public:

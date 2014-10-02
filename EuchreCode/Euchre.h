@@ -18,15 +18,18 @@
 #include <fstream>
 #include <vector>
 #include <string>
+#include <tuple>
 
+// Why are these in a class if there's no state?
+// I think these would be better as free functions (not even static functions).
 namespace Euchre {
 	class MakeObject {
 	public:
-		void LoadShaders(GLuint shaderProgram, const char* vertex_file_path, const char* fragment_file_path);
+		GLuint LoadShaders(const char* vertex_file_path, const char* fragment_file_path);
 
 		SDL_Window* createWindow(const char* title, int x, int y, int w, int h, Uint32 flags);
 
-		void LoadTextures(std::vector<GLuint> textures, const char* filename, const char* texName, GLuint shaderProgram, int texNum);
+		GLuint LoadTexture(const char* filename, int texNum);
 
 		template<class vecTYPE> // Allows for a vector of any type to be made and returned!
 		std::vector<vecTYPE> LoadData(std::string file_path);
@@ -39,7 +42,7 @@ namespace Euchre {
 		void makeAttribute(GLuint shaderProgram, const char* attrib_name, GLenum target, GLuint targetBuffer, GLint size, GLenum type, GLboolean normalized, GLsizei stride, const GLvoid* pointer);
 
 		std::tuple<GLuint, GLuint, GLuint, GLuint> makeAllBuffers(bool BG);
-	
+
 	};
 }
 

@@ -9,66 +9,61 @@
 #include "Euchre.h"
 using namespace Euchre;
 
-void MakeObject::LoadShaders(GLuint shaderProgram, const char* vertex_file_path, const char* fragment_file_path) { // Loads a vertex and fragment shader, returns a Shader Program called ProgramID
- 
+// Don't repeat yourself
+std::string loadShader(std::string const& path) {
+	std::string code;
+	std::ifstream stream {path};
+	if (stream.is_open()) {
+		std::string line;
+		while (getline(stream, line)) {
+			code += line + "\n";
+		}
+		stream.close();
+	}
+	return code;
+}
+
+// Ditto
+bool compileShader(GLuint shaderID, std::string const& code) {
+	char const* sourcePtr = code.c_str();
+	glShaderSource(shaderID, 1, &sourcePtr, nullptr);
+	glCompileShader(shaderID);
+
+	GLint result = GL_TRUE;
+	glGetShaderiv(shaderID, GL_COMPILE_STATUS, &result);
+	return result != GL_FALSE;
+}
+
+GLuint MakeObject::LoadShaders(const char* vertex_file_path, const char* fragment_file_path) { // Loads a vertex and fragment shader, returns a Shader Program called ProgramID
+	GLuint shaderProgram = glCreateProgram();
 	// Create the shaders
 	GLuint VertexShaderID = glCreateShader(GL_VERTEX_SHADER);
 	GLuint FragmentShaderID = glCreateShader(GL_FRAGMENT_SHADER);
-	
+
 	// Read the Vertex Shader code from the file
-	std::string VertexShaderCode;
-	std::ifstream VertexShaderStream;
-	VertexShaderStream.open(vertex_file_path);
-	if(VertexShaderStream.is_open()) {
-		std::string Line = "";
-		while(getline(VertexShaderStream, Line)) {
-			VertexShaderCode += "\n" + Line;
-		}
-		VertexShaderStream.close();
-	}
- 
+	std::string VertexShaderCode = loadShader(vertex_file_path);
+
 	// Read the Fragment Shader code from the file
-	std::string FragmentShaderCode;
-	std::ifstream FragmentShaderStream;
-	FragmentShaderStream.open(fragment_file_path);
-	if(FragmentShaderStream.is_open()){
-		std::string Line = "";
-		while(getline(FragmentShaderStream, Line)) {
-			FragmentShaderCode += "\n" + Line;
-		}
-		FragmentShaderStream.close();
-	}
-	GLint Result;
-	// Compile Vertex Shader
-	const char* VertexSourcePointer = VertexShaderCode.c_str();
-	glShaderSource(VertexShaderID, 1, &VertexSourcePointer , NULL);
-	glCompileShader(VertexShaderID);
-	glGetShaderiv(VertexShaderID, GL_COMPILE_STATUS, &Result);
-	if (Result == GL_FALSE) {
+	std::string FragmentShaderCode = loadShader(fragment_file_path);
+
+	if (!compileShader(VertexShaderID, VertexShaderCode)) {
 		std::cout << "NOOOV" << std::endl;
-		std::cout << VertexSourcePointer << std::endl;
+		std::cout << VertexShaderCode << std::endl;
 	}
-	
- 
-	// Compile Fragment Shader
-	const char* FragmentSourcePointer = FragmentShaderCode.c_str();
-	glShaderSource(FragmentShaderID, 1, &FragmentSourcePointer , NULL);
-	glCompileShader(FragmentShaderID);
-	glGetShaderiv(FragmentShaderID, GL_COMPILE_STATUS, &Result);
-	if (Result == GL_FALSE) {
+
+	if (!compileShader(FragmentShaderID, FragmentShaderCode)) {
 		std::cout << "NOOOF" << std::endl;
-		std::cout << FragmentSourcePointer << std::endl;
+		std::cout << FragmentShaderCode << std::endl;
 	}
-	
- 
+
 	// Link the program
 	glAttachShader(shaderProgram, VertexShaderID);
 	glAttachShader(shaderProgram, FragmentShaderID);
 	glLinkProgram(shaderProgram);
- 
+
 	glDeleteShader(VertexShaderID);
 	glDeleteShader(FragmentShaderID);
- 
+	return shaderProgram;
 }
 
 SDL_Window* MakeObject::createWindow(const char* title, int x, int y, int w, int h, Uint32 flags) { // Creates an SDL window context, returns the window
@@ -77,26 +72,29 @@ SDL_Window* MakeObject::createWindow(const char* title, int x, int y, int w, int
 	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
 	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 2);
 	SDL_GL_SetAttribute(SDL_GL_STENCIL_SIZE, 8);
-	SDL_Window *window = SDL_CreateWindow(title, x, y, w, h, flags);
-	return window;
+	return SDL_CreateWindow(title, x, y, w, h, flags);
 }
 
-void MakeObject::LoadTextures(std::vector<GLuint> textures, const char* filename, const char* texName, GLuint shaderProgram, int texNum) { // Loads textures and binds them to a position in textures
+GLuint MakeObject::LoadTexture(const char* filename, int texNum) {
 	int width, height;
 	unsigned char* image;
-	
+
+	GLuint tex = 0;
+	glGenTextures(1, &tex);
+
 	glActiveTexture(GL_TEXTURE0 + texNum);
-	
-	glBindTexture(GL_TEXTURE_2D, textures.at(texNum));
+
+	glBindTexture(GL_TEXTURE_2D, tex);
 	image = SOIL_load_image(filename, &width, &height, 0, SOIL_LOAD_RGB);
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, image);
 	SOIL_free_image_data(image);
-	glUniform1i(glGetUniformLocation(shaderProgram, texName), texNum);
-	
+
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+	return tex;
 }
 
 template<class vecTYPE> // Allows for a vector of any type to be made and returned!
@@ -124,7 +122,7 @@ GLuint MakeObject::makeBufferObject(GLsizei numBuffers, GLenum target, GLenum us
 	glGenBuffers(numBuffers, &buffer);
 	glBindBuffer(target, buffer);
 	glBufferData(target, data.size() * sizeof(vecTYPE), data.data(), usage);
-	
+
 	return buffer;
 }
 
@@ -143,41 +141,44 @@ void MakeObject::makeAttribute(GLuint shaderProgram, const char* attrib_name, GL
 
 std::tuple<GLuint, GLuint, GLuint, GLuint> Euchre::MakeObject::makeAllBuffers(bool BG) { // Returns vao, posBuffer, colBuffer, texBuffer, elementBuffer
 	std::string files[4];
+	auto const resources = std::string("./EuchreCode/Resources/");
 	if (BG) {
-		files[0] = "./Resources/BGattribs/bgPosition.txt";
-		files[1] = "./Resources/BGattribs/bgColor.txt";
-		files[2] = "./Resources/BGattribs/bgTexture.txt";
-		files[3] = "./Resources/BGattribs/bgdrawOrder.txt";
-	} else if (!BG) {
-		files[0] = "./Resources/cardAttribs/cardPosition.txt";
-		files[1] = "./Resources/cardAttribs/cardColor.txt";
-		files[2] = "./Resources/cardAttribs/cardTexture.txt";
-		files[3] = "./Resources/cardAttribs/carddrawOrder.txt";
+		auto const attribs = resources + "BGattribs/";
+		files[0] = attribs + "bgPosition.txt";
+		files[1] = attribs + "bgColor.txt";
+		files[2] = attribs + "bgTexture.txt";
+		files[3] = attribs + "bgdrawOrder.txt";
+	} else {
+		auto const attribs = resources + "cardAttribs/";
+		files[0] = attribs + "cardPosition.txt";
+		files[1] = attribs + "cardColor.txt";
+		files[2] = attribs + "cardTexture.txt";
+		files[3] = attribs + "carddrawOrder.txt";
 	}
-	
+
 	// Create a vector populated by text file data that describes the coordinates of the triangles to be drawn
 	std::vector<float> position = MakeObject::LoadData<float>(files[0]);
-	
+
 	// Create a Position Buffer Object and copy the vector data to it
 	GLuint positionBuffer = MakeObject::makeBufferObject(1, GL_ARRAY_BUFFER, GL_STATIC_DRAW, position);
-	
+
 	// Create a vector populated by text file data that has the color of the triangles to be drawn
 	std::vector<float> color = MakeObject::LoadData<float>(files[1]);
-	
+
 	// Create a Color Buffer Object and copy the vector data to it
 	GLuint colorBuffer = MakeObject::makeBufferObject(1, GL_ARRAY_BUFFER, GL_STATIC_DRAW, color);
-	
+
 	// Create a vector populated by text file data that has the location of the texture image
 	std::vector<float> texture = MakeObject::LoadData<float>(files[2]);
-	
+
 	// Create a Texture Buffer Object and copy the vector data to it
 	GLuint textureBuffer = MakeObject::makeBufferObject(1, GL_ARRAY_BUFFER, GL_STATIC_DRAW, texture);
-	
+
 	// Create a vector populated by text file data that describes the order that an object is drawn in
 	std::vector<GLuint> drawOrder = MakeObject::LoadData<GLuint>(files[3]);
-	
+
 	// Create an Element Buffer Object and copy the vector data to it
 	GLuint elementBuffer = MakeObject::makeBufferObject(1, GL_ELEMENT_ARRAY_BUFFER, GL_STATIC_DRAW, drawOrder);
-	
+
 	return std::tuple<GLuint, GLuint, GLuint, GLuint>(positionBuffer, colorBuffer, textureBuffer, elementBuffer);
 }

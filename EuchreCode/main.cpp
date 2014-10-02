@@ -16,58 +16,59 @@ int main() {
 	// Initialize GLEW
 	glewExperimental = GL_TRUE;
 	glewInit();
-	
-	GLuint shaderProgram = glCreateProgram();
-	
+
+	// Create shaders
+	GLuint bgShader = program.LoadShaders(
+		"./EuchreCode/Resources/vertexShaders/BGvertexShader.txt",
+		"./EuchreCode/Resources/fragmentShaders/BGfragmentShader.txt"
+	);
+	GLuint cardShader = program.LoadShaders(
+		"./EuchreCode/Resources/vertexShaders/CardVertexShader.txt",
+		"./EuchreCode/Resources/fragmentShaders/CardFragmentShader.txt"
+	);
+
 	// Create the vao
 	GLsizei numOfVAO = 2;
 	std::vector<GLuint> vertexArrayObject = program.makeVertexArrayObject(numOfVAO);
 	glBindVertexArray(vertexArrayObject.at(0));
-	
+
 	// BEGIN set up the background
-	bool bg = true;
-	auto BGbuffers = program.makeAllBuffers(bg);
-	
+	auto BGbuffers = program.makeAllBuffers(true);
+
 	GLuint BGpositionBuffer = std::get<0>(BGbuffers);
 	GLuint BGcolorBuffer = std::get<1>(BGbuffers);
 	GLuint BGtextureBuffer = std::get<2>(BGbuffers);
 	GLuint BGelementBuffer = std::get<3>(BGbuffers);
-	
-	program.LoadShaders(shaderProgram, "./Resources/vertexShaders/BGvertexShader.txt", "./Resources/fragmentShaders/BGfragmentShader.txt");
-	
+
 	// Specify the layout of the vertex data
-	program.makeAttribute(shaderProgram, "bgposition", GL_ARRAY_BUFFER, BGpositionBuffer, 2, GL_FLOAT, GL_FALSE, 0, 0);
-	
+	program.makeAttribute(bgShader, "bgposition", GL_ARRAY_BUFFER, BGpositionBuffer, 2, GL_FLOAT, GL_FALSE, 0, 0);
+
 	// Specify the color attributes
-	program.makeAttribute(shaderProgram, "bgcolor", GL_ARRAY_BUFFER, BGcolorBuffer, 3, GL_FLOAT, GL_FALSE, 0, 0);
-	
+	program.makeAttribute(bgShader, "bgcolor", GL_ARRAY_BUFFER, BGcolorBuffer, 3, GL_FLOAT, GL_FALSE, 0, 0);
+
 	// Specifiy the texture usage
-	program.makeAttribute(shaderProgram, "bgcoord", GL_ARRAY_BUFFER, BGtextureBuffer, 2, GL_FLOAT, GL_FALSE, 0, 0);
-	
-	std::vector<GLuint> textures(1,0); // Creates vector with one copy of a zero
-	program.LoadTextures(textures, "./Resources/Background.png", "backGround", shaderProgram, 0); // Binds the background texture to the single number in vector textures
+	program.makeAttribute(bgShader, "bgcoord", GL_ARRAY_BUFFER, BGtextureBuffer, 2, GL_FLOAT, GL_FALSE, 0, 0);
+
+	GLuint bgTexture = program.LoadTexture("./EuchreCode/Resources/Background.png", 0); // Binds the background texture to the single number in vector textures
 	// END set up background
+
 	// BEGIN set up card
-/*	glBindVertexArray(vertexArrayObject.at(1));
-	bg = false;
-	
-	auto CARDbuffers = program.makeAllBuffers(bg);
+	glBindVertexArray(vertexArrayObject[1]);
+
+	auto CARDbuffers = program.makeAllBuffers(false);
 	GLuint CARDpositionBuffer = std::get<0>(CARDbuffers);
 	GLuint CARDcolorBuffer = std::get<1>(CARDbuffers);
 	GLuint CARDtextureBuffer = std::get<2>(CARDbuffers);
 	GLuint CARDelementBuffer = std::get<3>(CARDbuffers);
 
-	program.LoadShaders(shaderProgram, "./Resources/vertexShaders/CardVertexShader.txt", "./Resources/fragmentShaders/CardFragmentShader.txt");
-	
-	program.makeAttribute(shaderProgram, "cardposition", GL_ARRAY_BUFFER, CARDpositionBuffer, 2, GL_FLOAT, GL_FALSE, 0, 0);
-	
-	program.makeAttribute(shaderProgram, "cardcolor", GL_ARRAY_BUFFER, CARDcolorBuffer, 3, GL_FLOAT, GL_FALSE, 0, 0);
-	
-	program.makeAttribute(shaderProgram, "cardcoord", GL_ARRAY_BUFFER, CARDtextureBuffer, 2, GL_FLOAT, GL_FALSE, 0, 0);
-	
-	std::vector<GLuint> tex(1,0);
-	program.LoadTextures(tex, "./Resources/king_of_hearts.png", "card", shaderProgram, 0);
-*/
+	program.makeAttribute(cardShader, "cardposition", GL_ARRAY_BUFFER, CARDpositionBuffer, 2, GL_FLOAT, GL_FALSE, 0, 0);
+
+	program.makeAttribute(cardShader, "cardcolor", GL_ARRAY_BUFFER, CARDcolorBuffer, 3, GL_FLOAT, GL_FALSE, 0, 0);
+
+	program.makeAttribute(cardShader, "cardcoord", GL_ARRAY_BUFFER, CARDtextureBuffer, 2, GL_FLOAT, GL_FALSE, 0, 0);
+
+	GLuint cardTexture = program.LoadTexture("./EuchreCode/Resources/king_of_hearts.png", 0);
+
 	SDL_Event windowEvent;
 	while (true) {
 		if (SDL_PollEvent(&windowEvent)) {
@@ -75,32 +76,33 @@ int main() {
 				break;
 			}
 		}
-		
-		glUseProgram(shaderProgram);
-		
+
+		glUseProgram(bgShader);
+		glBindTexture(GL_TEXTURE_2D, bgTexture);
+
 		// Clear the screen to black
 		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT);
-		
+
 		// Draw background
-		glBindVertexArray(vertexArrayObject.at(0));
-		
-		// Draw a rectangle from the 2 triangles using 6 indices
+		glBindVertexArray(vertexArrayObject[0]);
 		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
-		
+
+		glUseProgram(cardShader);
+		glBindTexture(GL_TEXTURE_2D, cardTexture);
+
 		// Draw card
 		glBindVertexArray(vertexArrayObject.at(1));
-		
 		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
-		
+
 		// Update window
 		SDL_GL_SwapWindow(window);
-		
+
 		glUseProgram(0);
 	}
-	glDeleteTextures(static_cast<GLsizei>(textures.size()), &textures.front()); // Casted to remove warning about precision loss (this doesn't matter)
-	
-	glDeleteProgram(shaderProgram);
+
+	glDeleteProgram(bgShader);
+	glDeleteProgram(cardShader);
 /*
 	// Delete all the buffers!
 	glDeleteBuffers(1, &BGelementBuffer);
@@ -109,9 +111,9 @@ int main() {
 	glDeleteBuffers(1, &BGtextureBuffer);
 
 	glDeleteTextures(static_cast<GLsizei>(textures.size()), &textures.front()); // Casted to remove warning about precision loss (this doesn't matter)
-	 
+
 	glDeleteProgram(shaderProgram);
-	 
+
 	// Delete all the buffers!
 	glDeleteBuffers(1, &CARDelementBuffer);
 	glDeleteBuffers(1, &CARDpositionBuffer);
@@ -120,7 +122,9 @@ int main() {
 
 */
 	glDeleteVertexArrays(numOfVAO, &vertexArrayObject.front());
-	
+	glDeleteTextures(1, &bgTexture);
+	glDeleteTextures(1, &cardTexture);
+
 	SDL_GL_DeleteContext(context);
 	return 0;
 }

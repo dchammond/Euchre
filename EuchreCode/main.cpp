@@ -53,7 +53,7 @@ int main() {
 	// END set up background
 
 	// BEGIN set up card
-	glBindVertexArray(vertexArrayObject[1]);
+	glBindVertexArray(vertexArrayObject.at(1));
 
 	auto CARDbuffers = program.makeAllBuffers(false);
 	GLuint CARDpositionBuffer = std::get<0>(CARDbuffers);
@@ -68,7 +68,8 @@ int main() {
 	program.makeAttribute(cardShader, "cardcoord", GL_ARRAY_BUFFER, CARDtextureBuffer, 2, GL_FLOAT, GL_FALSE, 0, 0);
 
 	GLuint cardTexture = program.LoadTexture("./EuchreCode/Resources/king_of_hearts.png", 0);
-
+	// END set up card
+	
 	SDL_Event windowEvent;
 	while (true) {
 		if (SDL_PollEvent(&windowEvent)) {
@@ -77,6 +78,7 @@ int main() {
 			}
 		}
 
+		// Background Shader
 		glUseProgram(bgShader);
 		glBindTexture(GL_TEXTURE_2D, bgTexture);
 
@@ -88,6 +90,7 @@ int main() {
 		glBindVertexArray(vertexArrayObject[0]);
 		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
+		// Switch to Card Shader Program
 		glUseProgram(cardShader);
 		glBindTexture(GL_TEXTURE_2D, cardTexture);
 
@@ -103,16 +106,12 @@ int main() {
 
 	glDeleteProgram(bgShader);
 	glDeleteProgram(cardShader);
-/*
+
 	// Delete all the buffers!
 	glDeleteBuffers(1, &BGelementBuffer);
 	glDeleteBuffers(1, &BGpositionBuffer);
 	glDeleteBuffers(1, &BGcolorBuffer);
 	glDeleteBuffers(1, &BGtextureBuffer);
-
-	glDeleteTextures(static_cast<GLsizei>(textures.size()), &textures.front()); // Casted to remove warning about precision loss (this doesn't matter)
-
-	glDeleteProgram(shaderProgram);
 
 	// Delete all the buffers!
 	glDeleteBuffers(1, &CARDelementBuffer);
@@ -120,7 +119,7 @@ int main() {
 	glDeleteBuffers(1, &CARDcolorBuffer);
 	glDeleteBuffers(1, &CARDtextureBuffer);
 
-*/
+
 	glDeleteVertexArrays(numOfVAO, &vertexArrayObject.front());
 	glDeleteTextures(1, &bgTexture);
 	glDeleteTextures(1, &cardTexture);

@@ -9,8 +9,8 @@
 #include "Euchre.h"
 using namespace Euchre;
 
-// Don't repeat yourself
-std::string loadShader(std::string const& path) {
+// Loads file data into an ifstream
+std::string MakeObject::loadShader(std::string const& path) {
 	std::string code;
 	std::ifstream stream {path};
 	if (stream.is_open()) {
@@ -23,8 +23,8 @@ std::string loadShader(std::string const& path) {
 	return code;
 }
 
-// Ditto
-bool compileShader(GLuint shaderID, std::string const& code) {
+// Compiles the Shader
+bool MakeObject::compileShader(GLuint shaderID, std::string const& code) {
 	char const* sourcePtr = code.c_str();
 	glShaderSource(shaderID, 1, &sourcePtr, nullptr);
 	glCompileShader(shaderID);
@@ -34,7 +34,7 @@ bool compileShader(GLuint shaderID, std::string const& code) {
 	return result != GL_FALSE;
 }
 
-GLuint MakeObject::LoadShaders(const char* vertex_file_path, const char* fragment_file_path) { // Loads a vertex and fragment shader, returns a Shader Program called ProgramID
+GLuint MakeObject::LoadShaders(const char* vertex_file_path, const char* fragment_file_path) { // Loads a vertex and fragment shader, returns a Shader Program called shaderProgram
 	GLuint shaderProgram = glCreateProgram();
 	// Create the shaders
 	GLuint VertexShaderID = glCreateShader(GL_VERTEX_SHADER);

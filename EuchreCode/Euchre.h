@@ -25,6 +25,10 @@
 namespace Euchre {
 	class MakeObject {
 	public:
+		std::string loadShader(std::string const& path);
+		
+		bool compileShader(GLuint shaderID, std::string const& code);
+		
 		GLuint LoadShaders(const char* vertex_file_path, const char* fragment_file_path);
 
 		SDL_Window* createWindow(const char* title, int x, int y, int w, int h, Uint32 flags);

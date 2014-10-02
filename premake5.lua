@@ -21,6 +21,7 @@ project "euchre"
   kind "ConsoleApp"
   language "C++"
   files { "EuchreCode/**.h", "EuchreCode/**.cpp" }
+  includedirs { "/usr/include/SOIL" }
   objdir "build/"
   targetname "euchre"
 

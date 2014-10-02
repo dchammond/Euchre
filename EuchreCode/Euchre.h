@@ -13,7 +13,7 @@
 #define GLEW_STATIC
 #include "GL/glew.h"
 #include <SDL2/SDL.h>
-#include "SOIL/SOIL.h"
+#include "SOIL.h"
 #include <iostream>
 #include <fstream>
 #include <vector>

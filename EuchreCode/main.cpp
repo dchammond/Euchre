@@ -87,7 +87,7 @@ int main() {
 		glClear(GL_COLOR_BUFFER_BIT);
 
 		// Draw background
-		glBindVertexArray(vertexArrayObject[0]);
+		glBindVertexArray(vertexArrayObject.at(0));
 		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
 		// Switch to Card Shader Program

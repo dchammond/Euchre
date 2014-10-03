@@ -1,0 +1,13 @@
+#version 330 core
+
+in vec3 CardColor;
+in vec2 CardCoord;
+
+out vec4 CardoutColor;
+
+uniform sampler2D CARD;
+
+void main()
+{
+    CardoutColor = texture(CARD, CardCoord) * vec4(CardColor, 1.0);
+}

@@ -1,0 +1,15 @@
+#version 330 core
+
+in vec2 cardposition;
+in vec2 cardcoord;
+in vec3 cardcolor;
+
+out vec3 CardColor;
+out vec2 CardCoord;
+
+void main()
+{
+	CardCoord = cardcoord;
+	CardColor = cardcolor;
+	gl_Position = vec4(cardposition, 0.0, 1.0);
+}

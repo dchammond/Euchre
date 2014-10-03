@@ -1,0 +1,13 @@
+#version 330 core
+
+in vec3 BGColor;
+in vec2 BGCoord;
+
+out vec4 BGoutColor;
+
+uniform sampler2D BG;
+
+void main()
+{
+    BGoutColor = texture(BG, BGCoord) * vec4(BGColor, 1.0);
+}

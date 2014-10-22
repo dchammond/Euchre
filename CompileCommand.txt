@@ -1,0 +1,1 @@
+clang++ -stdlib=libc++ -std=c++11 -I/usr/local/include/SOIL/src -I/usr/local/include/glm/glm -I/usr/local/include/glew-1.10.0/include/ -framework SDL2 -framework CoreFoundation -framework OpenGL main.cpp euchre.cpp -lglew -lsoil && ./a.out

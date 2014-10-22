@@ -141,7 +141,7 @@ void MakeObject::makeAttribute(GLuint shaderProgram, const char* attrib_name, GL
 
 std::tuple<GLuint, GLuint, GLuint, GLuint> Euchre::MakeObject::makeAllBuffers(bool BG) { // Returns vao, posBuffer, colBuffer, texBuffer, elementBuffer
 	std::string files[4];
-	auto const resources = std::string("./EuchreCode/Resources/");
+	auto const resources = std::string("/Users/Dillon/Desktop/Euchre/EuchreCode/Resources/");
 	if (BG) {
 		auto const attribs = resources + "BGattribs/";
 		files[0] = attribs + "bgPosition.txt";

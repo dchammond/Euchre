@@ -19,12 +19,12 @@ int main() {
 
 	// Create shaders
 	GLuint bgShader = program.LoadShaders(
-		"./EuchreCode/Resources/vertexShaders/BGvertexShader.txt",
-		"./EuchreCode/Resources/fragmentShaders/BGfragmentShader.txt"
+										  "/Users/Dillon/Desktop/Euchre/EuchreCode/Resources/vertexShaders/BGvertexShader.txt",
+										  "/Users/Dillon/Desktop/Euchre/EuchreCode/Resources/fragmentShaders/BGfragmentShader.txt"
 	);
 	GLuint cardShader = program.LoadShaders(
-		"./EuchreCode/Resources/vertexShaders/CardVertexShader.txt",
-		"./EuchreCode/Resources/fragmentShaders/CardFragmentShader.txt"
+											"/Users/Dillon/Desktop/Euchre/EuchreCode/Resources/vertexShaders/CardVertexShader.txt",
+											"/Users/Dillon/Desktop/Euchre/EuchreCode/Resources/fragmentShaders/CardFragmentShader.txt"
 	);
 
 	// Create the vao
@@ -49,7 +49,7 @@ int main() {
 	// Specifiy the texture usage
 	program.makeAttribute(bgShader, "bgcoord", GL_ARRAY_BUFFER, BGtextureBuffer, 2, GL_FLOAT, GL_FALSE, 0, 0);
 
-	GLuint bgTexture = program.LoadTexture("./EuchreCode/Resources/Background.png", 0); // Binds the background texture to the single number in vector textures
+	GLuint bgTexture = program.LoadTexture("/Users/Dillon/Desktop/Euchre/EuchreCode/Resources/Background.png", 0); // Binds the background texture to the single number in vector textures
 	// END set up background
 
 	// BEGIN set up card
@@ -67,7 +67,7 @@ int main() {
 
 	program.makeAttribute(cardShader, "cardcoord", GL_ARRAY_BUFFER, CARDtextureBuffer, 2, GL_FLOAT, GL_FALSE, 0, 0);
 
-	GLuint cardTexture = program.LoadTexture("./EuchreCode/Resources/king_of_hearts.png", 0);
+	GLuint cardTexture = program.LoadTexture("/Users/Dillon/Desktop/Euchre/EuchreCode/Resources/king_of_hearts.png", 0);
 	// END set up card
 	
 	SDL_Event windowEvent;

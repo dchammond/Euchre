@@ -147,13 +147,13 @@ std::tuple<GLuint, GLuint, GLuint, GLuint> Euchre::MakeObject::makeAllBuffers(bo
 		files[0] = attribs + "bgPosition.txt";
 		files[1] = attribs + "bgColor.txt";
 		files[2] = attribs + "bgTexture.txt";
-		files[3] = attribs + "bgdrawOrder.txt";
+		files[3] = attribs + "bgDrawOrder.txt";
 	} else {
 		auto const attribs = resources + "cardAttribs/";
 		files[0] = attribs + "cardPosition.txt";
 		files[1] = attribs + "cardColor.txt";
 		files[2] = attribs + "cardTexture.txt";
-		files[3] = attribs + "carddrawOrder.txt";
+		files[3] = attribs + "cardDrawOrder.txt";
 	}
 
 	// Create a vector populated by text file data that describes the coordinates of the triangles to be drawn

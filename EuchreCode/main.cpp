@@ -100,8 +100,10 @@ int main() {
 
 		// Update window
 		SDL_GL_SwapWindow(window);
-
+		
 		glUseProgram(0);
+		
+		SDL_Delay(16); // 60 fps
 	}
 
 	glDeleteProgram(bgShader);

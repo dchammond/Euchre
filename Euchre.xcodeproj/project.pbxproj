@@ -12,7 +12,7 @@
 		514F25C419C38EA600A6F955 /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 514F25C319C38EA600A6F955 /* CoreFoundation.framework */; };
 		514F25C619C38ECB00A6F955 /* SDL2.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 514F25C519C38ECB00A6F955 /* SDL2.framework */; };
 		514F25C819C38EEA00A6F955 /* libSOIL.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 514F25C719C38EEA00A6F955 /* libSOIL.a */; };
-		514F25CA19C38F0D00A6F955 /* libGLEW.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 514F25C919C38F0D00A6F955 /* libGLEW.a */; };
+		5185A7581A34165A00B5E1D5 /* libGLEW.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 514F25C919C38F0D00A6F955 /* libGLEW.a */; };
 		519F0DDB19D0E56F00B53B95 /* Euchre.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 519F0DD919D0E56F00B53B95 /* Euchre.cpp */; };
 /* End PBXBuildFile section */
 
@@ -58,7 +58,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				514F25CA19C38F0D00A6F955 /* libGLEW.a in Frameworks */,
+				5185A7581A34165A00B5E1D5 /* libGLEW.a in Frameworks */,
 				514F25C819C38EEA00A6F955 /* libSOIL.a in Frameworks */,
 				514F25C619C38ECB00A6F955 /* SDL2.framework in Frameworks */,
 				514F25C419C38EA600A6F955 /* CoreFoundation.framework in Frameworks */,

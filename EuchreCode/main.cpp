@@ -69,7 +69,7 @@ int main() {
 
 	GLuint cardTexture = program.LoadTexture("/Users/Dillon/Desktop/Euchre/EuchreCode/Resources/king_of_hearts.png", 0);
 	// END set up card
-	
+
 	SDL_Event windowEvent;
 	while (true) {
 		if (SDL_PollEvent(&windowEvent)) {
@@ -100,9 +100,9 @@ int main() {
 
 		// Update window
 		SDL_GL_SwapWindow(window);
-		
+
 		glUseProgram(0);
-		
+
 		SDL_Delay(16); // 60 fps
 	}
 
